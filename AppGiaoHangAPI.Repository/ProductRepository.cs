@@ -4,28 +4,31 @@ using AppGiaoHangAPI.Model.Model;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AppGiaoHangAPI.Repository
 {
-    public class CustomerRepository: ICustomerRepository
+    public class ProductRepository : IProductRepository
     {
-        string connectionString;
-        public CustomerRepository(IConfiguration IConfiguration)
+        private string connectionString;
+        public ProductRepository(IConfiguration configuration)
         {
-            this.connectionString = IConfiguration.GetConnectionString("dbConnection");
+            connectionString = configuration.GetConnectionString("dbConnection");
         }
-
-        public async Task<ErrorMessageInfo> createNewCustomer(Customer customer)
+        public async Task<ErrorMessageInfo> createNewProduct(Product product)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
-            if (string.IsNullOrEmpty(customer.CustomerName)
-                || string.IsNullOrEmpty(customer.CustomerRank)
-                || customer.Birthday == null
+            if (string.IsNullOrEmpty(product.ProductName) || 
+                product.Price == null
                 )
             {
                 errorMessageInfo.message = "Chưa điền đủ thông tin";
                 errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrCus002";
+                errorMessageInfo.error_code = "ErrPro002";
             }
             else
             {
@@ -36,17 +39,17 @@ namespace AppGiaoHangAPI.Repository
                         try
                         {
                             sqlConnection.Open();
-                            customer.DateCreate = DateTime.Now;
-                            string query = "Insert into Customer(CustomerName, Birthday, CustomerRank, DateCreate) values (@CustomerName    ," +
-                                "@Birthday, @CustomerRank, @DateCreate) ";
-                            errorMessageInfo.data = await sqlConnection.ExecuteAsync(query, customer);
+                            string query = "INSERT INTO Product(ProductName,Price,Description)" +
+                                " VALUES (@ProductName, @Price, @Description)";
+ 
+                            errorMessageInfo.data = await sqlConnection.ExecuteAsync(query, product);
                             errorMessageInfo.isSuccess = true;
                         }
                         catch (Exception e)
                         {
                             errorMessageInfo.isErrorEx = true;
                             errorMessageInfo.message = e.Message;
-                            errorMessageInfo.error_code = "ErrCus001";
+                            errorMessageInfo.error_code = "ErrPro001";
                         }
                         sqlConnection.Close();
                     }
@@ -55,13 +58,13 @@ namespace AppGiaoHangAPI.Repository
                 {
                     errorMessageInfo.message = e.Message;
                     errorMessageInfo.isErrorEx = true;
-                    errorMessageInfo.error_code = "ErrCus001";
+                    errorMessageInfo.error_code = "ErrPro001";
                 }
             }
             return errorMessageInfo;
         }
 
-        public async Task<ErrorMessageInfo> deleteCustomer(long customerID)
+        public async Task<ErrorMessageInfo> deleteProduct(long productID)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
             try
@@ -72,18 +75,18 @@ namespace AppGiaoHangAPI.Repository
                     {
                         sql.Open();
                         DynamicParameters dynamicParameters = new DynamicParameters();
-                        string querySelect = "SELECT * FROM Customer WHERE CustomerID = @id";
-                        dynamicParameters.Add("id", customerID);
-                        Customer customer = await sql.QuerySingleOrDefaultAsync<Customer>(querySelect, dynamicParameters);
-                        if (customer == null)
+                        string querySelect = "SELECT * FROM Product WHERE ProductID = @id";
+                        dynamicParameters.Add("id", productID);
+                        Product product = await sql.QuerySingleOrDefaultAsync<Product>(querySelect, dynamicParameters);
+                        if (product == null)
                         {
                             errorMessageInfo.isErrorEx = true;
                             errorMessageInfo.message = "Không có khách hàng này";
-                            errorMessageInfo.error_code = "ErrCus003";
+                            errorMessageInfo.error_code = "ErrPro003";
                         }
                         else
                         {
-                            string queryDelete = "DELETE Customer Where CustomerID = @id";
+                            string queryDelete = "DELETE Product Where ProductID = @id";
                             errorMessageInfo.message = "Xóa khách hàng thành công";
                             errorMessageInfo.data = await sql.ExecuteAsync(queryDelete, dynamicParameters);
                             errorMessageInfo.isSuccess = true;
@@ -93,7 +96,7 @@ namespace AppGiaoHangAPI.Repository
                     {
                         errorMessageInfo.message = e.Message;
                         errorMessageInfo.isErrorEx = true;
-                        errorMessageInfo.error_code = "ErrCus001";
+                        errorMessageInfo.error_code = "ErrPro001";
                     }
                     sql.Close();
                 }
@@ -102,12 +105,12 @@ namespace AppGiaoHangAPI.Repository
             {
                 errorMessageInfo.message = e.Message;
                 errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrCus001";
+                errorMessageInfo.error_code = "ErrPro001";
             }
             return errorMessageInfo;
         }
 
-        public async Task<ErrorMessageInfo> getAllCustomer()
+        public async Task<ErrorMessageInfo> getAllProduct()
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
             using (var sqlConnection = new SqlConnection(connectionString))
@@ -115,32 +118,33 @@ namespace AppGiaoHangAPI.Repository
                 try
                 {
                     sqlConnection.Open();
-                    string query = "SELECT * FROM Customer";
-                    errorMessageInfo.data = await sqlConnection.QueryAsync<Customer>(query);
+                    string query = "SELECT * FROM Product";
+                    errorMessageInfo.data = await sqlConnection.QueryAsync<Product>(query);
                     errorMessageInfo.isSuccess = true;
                 }
                 catch (Exception e)
                 {
                     errorMessageInfo.isErrorEx = true;
                     errorMessageInfo.message = e.Message;
-                    errorMessageInfo.error_code = "ErrCus001";
+                    errorMessageInfo.error_code = "ErrPro001";
                 }
             }
             return errorMessageInfo;
         }
 
-        public async Task<ErrorMessageInfo> getCustomerByID(long id)
+        public async Task<ErrorMessageInfo> getProductByID(long id)
         {
+
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
             using (var sqlConnection = new SqlConnection(connectionString))
             {
                 try
                 {
                     sqlConnection.Open();
-                    string query = "SELECT * FROM Customer WHERE CustomerID = @id";
+                    string query = "SELECT * FROM Product WHERE ProductID = @id";
                     DynamicParameters dynamicParameters = new DynamicParameters();
                     dynamicParameters.Add("id", id);
-                    errorMessageInfo.data = await sqlConnection.QueryAsync<Customer>(query, dynamicParameters);
+                    errorMessageInfo.data = await sqlConnection.QueryAsync<Product>(query, dynamicParameters);
                     if (errorMessageInfo.data == null)
                         errorMessageInfo.message = "Không có khách hàng này";
                     errorMessageInfo.isSuccess = true;
@@ -149,13 +153,13 @@ namespace AppGiaoHangAPI.Repository
                 {
                     errorMessageInfo.isErrorEx = true;
                     errorMessageInfo.message = e.Message;
-                    errorMessageInfo.error_code = "ErrCus001";
+                    errorMessageInfo.error_code = "ErrPro001";
                 }
             }
             return errorMessageInfo;
         }
 
-        public async Task<ErrorMessageInfo> updateNewCustomer(long customerID, Customer customer)
+        public async Task<ErrorMessageInfo> updateNewProduct(long productID, Product product)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
             try
@@ -166,23 +170,23 @@ namespace AppGiaoHangAPI.Repository
                     {
                         sql.Open();
                         DynamicParameters dynamicParameters = new DynamicParameters();
-                        string querySelect = "SELECT * FROM Customer WHERE CustomerID = @id";
-                        dynamicParameters.Add("id", customerID);
-                        Customer customerFind = await sql.QuerySingleOrDefaultAsync<Customer>(querySelect, dynamicParameters);
-                        if (customerFind == null)
+                        string querySelect = "SELECT * FROM Product WHERE ProductID = @id";
+                        dynamicParameters.Add("id", productID);
+                        Product productFind = await sql.QuerySingleOrDefaultAsync<Product>(querySelect, dynamicParameters);
+                        if (productFind == null)
                         {
                             errorMessageInfo.isErrorEx = true;
-                            errorMessageInfo.message = "Không có khách hàng này";
-                            errorMessageInfo.error_code = "ErrCus003";
+                            errorMessageInfo.message = "Không có sảng phẩm này";
+                            errorMessageInfo.error_code = "ErrPro003";
                         }
                         else
-                        { 
-                            customer.CustomerCode = customerFind.CustomerCode;
-                            customer.CustomerId = customerFind.CustomerId;
-                            string queryDelete = "UPDATE Customer   " +
-                                "SET Birthday = @Birthday, CustomerName = @CustomerName, CustomerRank = @CustomerRank " +
-                                "Where CustomerID = @CustomerID";
-                            errorMessageInfo.data = await sql.ExecuteAsync(queryDelete, customer);
+                        {
+                            if (string.IsNullOrEmpty(product.Description))
+                                product.Description = "";
+                            string queryUpdate = "UPDATE Product   " +
+                                "SET ProductName = @ProductName, Price = @Price, Description = @Description " +
+                                "Where ProductID = @ProductID";               
+                            errorMessageInfo.data = await sql.ExecuteAsync(queryUpdate, product);
                             errorMessageInfo.isSuccess = true;
                         }
                     }
@@ -190,7 +194,7 @@ namespace AppGiaoHangAPI.Repository
                     {
                         errorMessageInfo.message = e.Message;
                         errorMessageInfo.isErrorEx = true;
-                        errorMessageInfo.error_code = "ErrCus001";
+                        errorMessageInfo.error_code = "ErrPro001";
                     }
                     sql.Close();
                 }
@@ -199,7 +203,7 @@ namespace AppGiaoHangAPI.Repository
             {
                 errorMessageInfo.message = e.Message;
                 errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrCus001";
+                errorMessageInfo.error_code = "ErrPro001";
             }
             return errorMessageInfo;
         }

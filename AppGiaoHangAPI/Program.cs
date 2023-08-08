@@ -14,6 +14,7 @@ builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<ICustomerOrderRepository, CustomerOrderRepository>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddDbContext<QuanLyGiaoHang>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("dbConnection")));
 builder.Services.AddControllers();
