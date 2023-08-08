@@ -19,7 +19,6 @@ namespace AppGiaoHangAPI.Controllers
             this.customerRepository = customerRepository;
         }
         [HttpGet("", Name = "GetAllCustomer")]
-        [Authorize(Roles = "admin")]
         public async Task<ActionResult<ResponeInfo>> getAllCustomer()
         {
             ResponeInfo responeInfo = new ResponeInfo();
@@ -46,7 +45,6 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpPost("", Name = "PostNewCustomer")]
-        [Authorize(Roles = "admin")]
         public async Task<ActionResult<ResponeInfo>> createNewCustomer(Customer customer)
         {
             ResponeInfo responeInfo = new ResponeInfo();
@@ -73,7 +71,6 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpGet("{id}", Name = "GetCustomerByID")]
-        [Authorize(Roles = "nhanvien")]
         public async Task<ActionResult<ResponeInfo>> getCustomerByID(long id)
         {
             ResponeInfo responeInfo = new ResponeInfo();
@@ -100,7 +97,6 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpPut("{id}", Name = "UpdateCustomer")]
-        [Authorize(Roles = "admin")]
         public async Task<ActionResult<ResponeInfo>> updateCustomer(long id, Customer customer)
         {
             ResponeInfo responeInfo = new ResponeInfo();
@@ -127,8 +123,6 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpDelete("{id}", Name = "DeleteCustomer")]
-        [Authorize(Roles = "admin")]
-
         public async Task<ActionResult<ResponeInfo>> deleteCustomer(long id)
         {
             ResponeInfo responeInfo = new ResponeInfo();

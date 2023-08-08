@@ -8,25 +8,25 @@ using System.Data;
 
 namespace AppGiaoHangAPI.Controllers
 {
-    [Route("api/product")]
+    [Route("api/customer-infomation")]
     [ApiController]
     [Authorize]
-    public class ProductController : ControllerBase
+    public class CustomerOrderInformationController : ControllerBase
     {
-        private IProductRepository productRepository;
-        public ProductController(IProductRepository productRepository)
+        private ICustomerOrderInformationRepository customerOrderInformationRepository;
+        public CustomerOrderInformationController(ICustomerOrderInformationRepository customerOrderInformationRepository)
         {
-            this.productRepository = productRepository;
+            this.customerOrderInformationRepository = customerOrderInformationRepository;
         }
-        [HttpGet("", Name = "GetAllProduct")]
-        public async Task<ActionResult<ResponeInfo>> getAllProduct()
+        [HttpGet("", Name = "GetAllCustomerInfo")]
+        public async Task<ActionResult<ResponeInfo>> getAllCustomer()
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.getAllProduct();
+                ErrorMessageInfo error = await customerOrderInformationRepository.getAllCustomerOrderInformation();
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -44,15 +44,15 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpPost("", Name = "PostNewProduct")]
-        public async Task<ActionResult<ResponeInfo>> createNewProduct(Product product)
+        [HttpPost("", Name = "PostNewCustomerInfo")]
+        public async Task<ActionResult<ResponeInfo>> createNewCustomer(CustomerOrderInformation customer)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.createNewProduct(product);
+                ErrorMessageInfo error = await customerOrderInformationRepository.createNewCustomerOrderInformation(customer);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -70,15 +70,15 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpGet("{id}", Name = "GetProductByID")]
-        public async Task<ActionResult<ResponeInfo>> getProductByID(long id)
+        [HttpGet("{id}", Name = "GetCustomerInfoByID")]
+        public async Task<ActionResult<ResponeInfo>> getCustomerInfomationByID(long id)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.getProductByID(id);
+                ErrorMessageInfo error = await customerOrderInformationRepository.getCustomerOrderInformationByID(id);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -96,15 +96,42 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpPut("{id}", Name = "UpdateProduct")]
-        public async Task<ActionResult<ResponeInfo>> updateProduct(long id, Product product)
+        [HttpGet("/api/customer/customer-infomation/{id}", Name = "GetCustomerInfoByCustomerID")]
+        public async Task<ActionResult<ResponeInfo>> getCustomerInfomationByCustomerID(long id)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.updateNewProduct(id, product);
+                ErrorMessageInfo error = await customerOrderInformationRepository.getCustomerOrderInformationByCustomerID(id);
+                if (error.isErrorEx || !error.isSuccess)
+                {
+
+                    responeInfo.error_code = error.error_code;
+                    responeInfo.message = error.message;
+                    return BadRequest(responeInfo);
+                }
+                responeInfo.data = error.data;
+                return await Task.FromResult(responeInfo);
+            }
+            catch (Exception ex)
+            {
+                responeInfo.statusCode = System.Net.HttpStatusCode.InternalServerError;
+                responeInfo.message = ex.Message;
+                return BadRequest(responeInfo);
+            }
+        }
+        [HttpPut("{id}", Name = "UpdateCustomerInfo")]
+      
+        public async Task<ActionResult<ResponeInfo>> updateCustomerInfo(long id, CustomerOrderInformation customerInfo)
+        {
+            ResponeInfo responeInfo = new ResponeInfo();
+            try
+            {
+                responeInfo.statusCode = System.Net.HttpStatusCode.OK;
+                Stream a = HttpContext.Request.Body;
+                ErrorMessageInfo error = await customerOrderInformationRepository.updateNewCustomerOrderInformation(id, customerInfo);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -122,15 +149,17 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpDelete("{id}", Name = "DeleteProduct")]
-        public async Task<ActionResult<ResponeInfo>> deleteProduct(long id)
+        [HttpDelete("{id}", Name = "DeleteCustomerInfo")]
+
+
+        public async Task<ActionResult<ResponeInfo>> deleteCustomer(long id)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.deleteProduct(id);
+                ErrorMessageInfo error = await customerOrderInformationRepository.deleteCustomerOrderInformation(id);
                 if (error.isErrorEx || !error.isSuccess)
                 {
                     responeInfo.error_code = error.error_code;

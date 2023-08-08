@@ -1,32 +1,29 @@
 ﻿using AppGiaoHangAPI.Interface.IRepository;
 using AppGiaoHangAPI.Model.HelperModel;
 using AppGiaoHangAPI.Model.Model;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace AppGiaoHangAPI.Controllers
 {
-    [Route("api/product")]
+    [Route("api/account")]
     [ApiController]
-    [Authorize]
-    public class ProductController : ControllerBase
+    public class AccountController : ControllerBase
     {
-        private IProductRepository productRepository;
-        public ProductController(IProductRepository productRepository)
+        private IAccountRepository accountRepository;
+        public AccountController(IAccountRepository accountRepository)
         {
-            this.productRepository = productRepository;
+            this.accountRepository = accountRepository;
         }
-        [HttpGet("", Name = "GetAllProduct")]
-        public async Task<ActionResult<ResponeInfo>> getAllProduct()
+        [HttpGet("", Name = "GetAllAccount")]
+        public async Task<ActionResult<ResponeInfo>> getAllAccount()
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.getAllProduct();
+                ErrorMessageInfo error = await accountRepository.getAllAccount();
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -44,15 +41,15 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpPost("", Name = "PostNewProduct")]
-        public async Task<ActionResult<ResponeInfo>> createNewProduct(Product product)
+        [HttpPost("", Name = "PostNewAccount")]
+        public async Task<ActionResult<ResponeInfo>> createNewAccount(Account account)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.createNewProduct(product);
+                ErrorMessageInfo error = await accountRepository.createNewAccount(account);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -70,15 +67,15 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpGet("{id}", Name = "GetProductByID")]
-        public async Task<ActionResult<ResponeInfo>> getProductByID(long id)
+        [HttpGet("{id}", Name = "GetAccountByID")]
+        public async Task<ActionResult<ResponeInfo>> getAccountByID(long id)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.getProductByID(id);
+                ErrorMessageInfo error = await accountRepository.getAccountByID(id);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -96,15 +93,15 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpPut("{id}", Name = "UpdateProduct")]
-        public async Task<ActionResult<ResponeInfo>> updateProduct(long id, Product product)
+        [HttpPut("{id}", Name = "UpdateAccount")]
+        public async Task<ActionResult<ResponeInfo>> updateAccount(long id, Account account)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.updateNewProduct(id, product);
+                ErrorMessageInfo error = await accountRepository.updateAccount(id, account);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -122,15 +119,41 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpDelete("{id}", Name = "DeleteProduct")]
-        public async Task<ActionResult<ResponeInfo>> deleteProduct(long id)
+        [HttpPost("change-password", Name = "ChangePasswordAccount")]
+        public async Task<ActionResult<ResponeInfo>> changePassword( Account account)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.deleteProduct(id);
+                ErrorMessageInfo error = await accountRepository.changePassword(account);
+                if (error.isErrorEx || !error.isSuccess)
+                {
+
+                    responeInfo.error_code = error.error_code;
+                    responeInfo.message = error.message;
+                    return BadRequest(responeInfo);
+                }
+                responeInfo.data = error.data;
+                return Ok(responeInfo);
+            }
+            catch (Exception ex)
+            {
+                responeInfo.statusCode = System.Net.HttpStatusCode.InternalServerError;
+                responeInfo.message = ex.Message;
+                return BadRequest(responeInfo);
+            }
+        }
+        [HttpDelete("{id}", Name = "DeleteAccount")]
+        public async Task<ActionResult<ResponeInfo>> deleteAccount(long id)
+        {
+            ResponeInfo responeInfo = new ResponeInfo();
+            try
+            {
+                responeInfo.statusCode = System.Net.HttpStatusCode.OK;
+                Stream a = HttpContext.Request.Body;
+                ErrorMessageInfo error = await accountRepository.deleteAccount(id);
                 if (error.isErrorEx || !error.isSuccess)
                 {
                     responeInfo.error_code = error.error_code;

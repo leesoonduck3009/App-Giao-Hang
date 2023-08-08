@@ -19,7 +19,6 @@ namespace AppGiaoHangAPI.Controllers
         }
         [HttpGet("", Name = "GetAllEmployee")]
         [Authorize(Roles = "admin")]
-
         public async Task<ActionResult<ResponeInfo>> getAllEmployee()
         {
             ResponeInfo responeInfo = new ResponeInfo();
