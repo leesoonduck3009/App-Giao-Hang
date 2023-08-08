@@ -1,0 +1,14 @@
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\obj\Debug\net6.0\AppGiaoHangAPI.Model.csproj.AssemblyReference.cache
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\obj\Debug\net6.0\AppGiaoHangAPI.Model.GeneratedMSBuildEditorConfig.editorconfig
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\obj\Debug\net6.0\AppGiaoHangAPI.Model.AssemblyInfoInputs.cache
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\obj\Debug\net6.0\AppGiaoHangAPI.Model.AssemblyInfo.cs
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\obj\Debug\net6.0\AppGiaoHangAPI.Model.csproj.CoreCompileInputs.cache
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\bin\Debug\net6.0\AppGiaoHangAPI.Model.deps.json
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\bin\Debug\net6.0\AppGiaoHangAPI.Model.dll
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\bin\Debug\net6.0\AppGiaoHangAPI.Model.pdb
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\obj\Debug\net6.0\AppGiaoHangAPI.Model.dll
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\obj\Debug\net6.0\refint\AppGiaoHangAPI.Model.dll
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\obj\Debug\net6.0\AppGiaoHangAPI.Model.pdb
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\obj\Debug\net6.0\ref\AppGiaoHangAPI.Model.dll
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\bin\Debug\net6.0\AppGiaoHangAPI.Model.runtimeconfig.json
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPI.Model\obj\Debug\net6.0\AppGiaoHangAPI.Model.genruntimeconfig.cache

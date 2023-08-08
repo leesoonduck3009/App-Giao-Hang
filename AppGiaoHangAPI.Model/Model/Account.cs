@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppGiaoHangAPI.Model.Model
 {
-    public class Account
+    public partial class Account
     {
-        public long AccountID { get; set; }
+        [Key]
+        public long AccountId { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public DateTime AccountCreateTime { get; set; }
-        public string Roles { get; set; }
-        public long EmployeeID { get; set; }
-
-        public Employee Employee { get; set; }
+        public DateTime? AccountCreateTime { get; set; }
+        public string? Roles { get; set; }
+        public long? EmployeeId { get; set; }
+        public virtual Employee? Employee { get; set; }
     }
 }

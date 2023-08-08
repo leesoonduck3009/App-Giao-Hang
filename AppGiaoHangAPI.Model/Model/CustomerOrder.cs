@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace AppGiaoHangAPI.Model.Model
 {
-    public class CustomerOrder
+    public partial class CustomerOrder
     {
-        public long CustomerOrderID { get; set; }
-        public DateTime OrderDate { get; set; }
-        public long CustomerOrderInformationID { get; set; }
-        public long EmployeeID { get; set; }
-        public double TotalPrice { get; set; }
-        public string OrderStatus { get; set; }
+        public CustomerOrder()
+        {
+            CustomerOrderDetails = new HashSet<CustomerOrderDetail>();
+        }
+        [Key]
+        public long CustomerOrderId { get; set; }
+        public DateTime? OrderDate { get; set; }
+        public long? CustomerOrderInformationId { get; set; }
+        public long? EmployeeId { get; set; }
+        public double? TotalPrice { get; set; }
+        public string? OrderStatus { get; set; }
 
-        public CustomerOrderInformation CustomerOrderInformation { get; set; }
-        public Employee Employee { get; set; }
-        public ICollection<CustomerOrderDetail> CustomerOrderDetails { get; set; }
+        public virtual CustomerOrderInformation? CustomerOrderInformation { get; set; }
+        public virtual Employee? Employee { get; set; }
+        public virtual ICollection<CustomerOrderDetail> CustomerOrderDetails { get; set; }
     }
 }
