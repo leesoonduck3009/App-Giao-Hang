@@ -158,10 +158,12 @@ namespace AppGiaoHangAPI.Repository
 
         public async Task<ErrorMessageInfo> updateCustomerOrder(long customerOrderID, CustomerOrder customerOrder)
         {
+            
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
             try
             {
-                CustomerOrder customerOrderFind = await quanlyCuaHang.CustomerOrders.Include(p=>p.CustomerOrderDetails).FirstOrDefaultAsync(p=>p.CustomerOrderId==customerOrder.CustomerOrderId);
+                CustomerOrder customerOrderFind = await quanlyCuaHang.CustomerOrders.AsNoTracking().Include(p=>p.CustomerOrderDetails).FirstOrDefaultAsync(p=>p.CustomerOrderId==customerOrder.CustomerOrderId);
+                await quanlyCuaHang.Entry(customerOrderFind).ReloadAsync();
                 if (customerOrderFind == null)
                 {
                     errorMessageInfo.isErrorEx = true;
@@ -174,75 +176,49 @@ namespace AppGiaoHangAPI.Repository
                     {
                         sqlConnection.Open();
                         // B2. Kiểm tra trong danh sách HoaDonChiTiet mới có đối tượng HoaDonChiTiet cũ không. Nếu không có => Delete HoaDonChiTietCu đi
-                        List<CustomerOrderDetail> customerOrderDetailFind = customerOrderFind.CustomerOrderDetails.Where(p => p.CustomerOrderId == customerOrder.CustomerOrderId).ToList();
-                        if (customerOrderDetailFind != null)
+                        List<CustomerOrderDetail> oldCustomerOrderDetails = customerOrderFind.CustomerOrderDetails.ToList();
+                        List<CustomerOrderDetail> newCustomerOrderDetails = customerOrder.CustomerOrderDetails.ToList();
+                        foreach (var item in oldCustomerOrderDetails)
                         {
-                            if (customerOrder.CustomerOrderDetails == null)
+                            if (!newCustomerOrderDetails.Exists(p => p.CustomerOrderId == item.CustomerOrderId && p.ProductId == item.ProductId))
                             {
-                                string querydelete = "Delete CustomerOrderDetails WHERE CustomerOrderID = @CustomerOrderId";
-                                DynamicParameters parameters = new DynamicParameters();
-                                parameters.Add("CustomerOrderID", customerOrderID);
-                                await sqlConnection.ExecuteAsync(querydelete, parameters);
+                                {
+                                    string querydelete = "DELETE CustomerOrderDetail WHERE CustomerOrderId = @CustomerOrderId AND ProductID = @ProductId";
+                                    customerOrderFind.TotalPrice -= item.OrderDetailPrice;
+                                    await sqlConnection.ExecuteAsync(querydelete, item);
+                                }
+                            }
+                        }
+                        //    B3.Bắt đầu kiểm tra danh sách HoaDonChiTiet mới
+                        //     - Nếu ID tồn tại => Update
+                        //     - Ngược lại => Insert
+                        foreach (var item in newCustomerOrderDetails)
+                        {
+                            if (oldCustomerOrderDetails.Exists(p => p.CustomerOrderId == item.CustomerOrderId && p.ProductId == item.ProductId))
+                            {
+                                {
+                                    string queryUpdate = "UPDATE CustomerOrderDetail " +
+                                       "SET Quantity = @Quantity " +
+                                       "WHERE CustomerOrderID = @CustomerOrderId AND ProductID = @ProductId";
+                                    customerOrderFind.TotalPrice -= oldCustomerOrderDetails.Single(p => p.CustomerOrderId == item.CustomerOrderId && p.ProductId == item.ProductId).OrderDetailPrice;
+                                    customerOrderFind.TotalPrice += (quanlyCuaHang.Products.Find(item.ProductId).Price * item.Quantity);
+                                    await sqlConnection.ExecuteAsync(queryUpdate, item);
+                                }
                             }
                             else
                             {
-                                customerOrderDetailFind.ForEach(async item =>
-                                {
-                                    CustomerOrderDetail customerOrderDetail = customerOrder.CustomerOrderDetails.SingleOrDefault(p => p.CustomerOrderDetailId == item.CustomerOrderDetailId);
-                                    if (customerOrderDetail == null)
-                                    {
-
-                                        customerOrder.TotalPrice -= item.OrderDetailPrice;
-                                        string query = "DELETE CustomerOrderDetail WHERE CustomerOrderDetailID = @CustomerOrderDetailId";
-                                        await sqlConnection.ExecuteAsync(query, item);
-                                    }
-                                });
+                                string queryInsert = "INSERT INTO CustomerOrderDetail(CustomerOrderID,ProductID,Quantity) VALUES(@CustomerOrderId,@ProductId,@Quantity)\r\n";
+                                customerOrderFind.TotalPrice += (quanlyCuaHang.Products.Find(item.ProductId).Price * item.Quantity);
+                                await sqlConnection.ExecuteAsync(queryInsert, item);
                             }
                         }
-                        string queryUpdate = "UPDATE CustomerOrder " +
-                        "SET TotalPrice = @TotalPrice " +
-                        "WHERE CustomerOrderID = @CustomerOrderId";
-                        errorMessageInfo.data = await sqlConnection.ExecuteAsync(queryUpdate, customerOrder);
-                        
-                        //B3. Bắt đầu kiểm tra danh sách HoaDonChiTiet mới
-                        //-Nếu ID tồn tại => Update
-                        //- Ngược lại => Insert
-                        if (customerOrder.CustomerOrderDetails != null)
-                        {
-                            if (customerOrderFind.CustomerOrderDetails.Count == 0)
-                            {
-                                string queryI = "INSERT INTO CustomerOrderDetail(CustomerOrderID,ProductID,Quantity) VALUES(@CustomerOrderId,@ProductId,@Quantity)\r\n";
-
-                                await sqlConnection.ExecuteAsync(queryI, customerOrder.CustomerOrderDetails);
-                            }
-                            else
-                            {
-                                customerOrder.CustomerOrderDetails.ToList().ForEach(async item =>
-                                {
-
-                                    CustomerOrderDetail customerOrderDetail = customerOrderFind.CustomerOrderDetails.Where(p => p.CustomerOrderDetailId == item.CustomerOrderDetailId).SingleOrDefault();
-                                    if (customerOrderDetail == null)
-                                    {
-                                        string query = "INSERT INTO CustomerOrderDetail(CustomerOrderID,ProductID,Quantity) VALUES(@CustomerOrderId,@ProductId,@Quantity)\r\n";
-                                        item.OrderDetailPrice = quanlyCuaHang.Products.Find(item.ProductId).Price * item.Quantity;
-                                        await sqlConnection.ExecuteAsync(query, item);
-                                    }
-                                    else
-                                    {
-                                        string query = "UPDATE CustomerOrderDetail " +
-                                       "SET ProductID = @ProductId, Quantity = @Quantity " +
-                                       "WHERE CustomerOrderDetailID = @CustomerOrderDetailId";
-                                        await sqlConnection.ExecuteAsync(query, item);
-                                        item.OrderDetailPrice = quanlyCuaHang.Products.Find(item.ProductId).Price * item.Quantity;
-                                        customerOrder.TotalPrice = customerOrder.TotalPrice - customerOrderDetail.OrderDetailPrice + item.OrderDetailPrice;
-                                    }
-                                });
-                            }
-                        }
-                        string query = "UPDATE CustomerOrder " +
+                        customerOrderFind.OrderStatus = customerOrder.OrderStatus;
+                        customerOrderFind.CustomerOrderInformation = customerOrder.CustomerOrderInformation;
+                        customerOrderFind.EmployeeId = customerOrder.EmployeeId;
+                            string query = "UPDATE CustomerOrder " +
                                    "SET CustomerOrderInformationID = @CustomerOrderInformationId, EmployeeID = @EmployeeId, OrderStatus = @OrderStatus , TotalPrice = @TotalPrice " +
                                    "WHERE CustomerOrderID = @CustomerOrderId";
-                        errorMessageInfo.data = await sqlConnection.ExecuteAsync(query, customerOrder);
+                        errorMessageInfo.data = await sqlConnection.ExecuteAsync(query, customerOrderFind);
                         sqlConnection.Close();
                     }
                 }
@@ -256,7 +232,7 @@ namespace AppGiaoHangAPI.Repository
             }
             return errorMessageInfo;
         }
-        public async Task<ErrorMessageInfo> deleteCustomerOrder(long customerOrderID)
+        public async Task<ErrorMessageInfo> deleteCustomerOrder (long customerOrderID)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
             try
