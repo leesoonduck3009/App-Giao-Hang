@@ -1,6 +1,7 @@
 ﻿using AppGiaoHangAPI.Interface.IRepository;
 using AppGiaoHangAPI.Model.HelperModel;
 using AppGiaoHangAPI.Model.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace AppGiaoHangAPI.Controllers
             this.accountRepository = accountRepository;
         }
         [HttpGet("", Name = "GetAllAccount")]
+        [Authorize(Roles ="admin")]
         public async Task<ActionResult<ResponeInfo>> getAllAccount()
         {
             ResponeInfo responeInfo = new ResponeInfo();
@@ -42,6 +44,7 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpPost("", Name = "PostNewAccount")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<ResponeInfo>> createNewAccount(Account account)
         {
             ResponeInfo responeInfo = new ResponeInfo();
@@ -68,6 +71,7 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpGet("{id}", Name = "GetAccountByID")]
+        [Authorize]
         public async Task<ActionResult<ResponeInfo>> getAccountByID(long id)
         {
             ResponeInfo responeInfo = new ResponeInfo();
@@ -94,6 +98,8 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpPut("{id}", Name = "UpdateAccount")]
+        [Authorize(Roles = "admin")]
+
         public async Task<ActionResult<ResponeInfo>> updateAccount(long id, Account account)
         {
             ResponeInfo responeInfo = new ResponeInfo();
@@ -146,6 +152,7 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpDelete("{id}", Name = "DeleteAccount")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<ResponeInfo>> deleteAccount(long id)
         {
             ResponeInfo responeInfo = new ResponeInfo();
