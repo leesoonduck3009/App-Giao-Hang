@@ -12,8 +12,8 @@ namespace AppGiaoHangAPI.Interface.IRepository
     {
         Task<ErrorMessageInfo> getAllProduct();
         Task<ErrorMessageInfo> getProductByID(long id);
-        Task<ErrorMessageInfo> createNewProduct(Product Product);
-        Task<ErrorMessageInfo> updateNewProduct(long ProductID, Product product);
-        Task<ErrorMessageInfo> deleteProduct(long ProductID);
+        Task<ErrorMessageInfo> createNewProduct(List<Product> products);
+        Task<ErrorMessageInfo> updateNewProduct(List<Product> products);
+        Task<ErrorMessageInfo> deleteProduct(List<Product> products);
     }
 }

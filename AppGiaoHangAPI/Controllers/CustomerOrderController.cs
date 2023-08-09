@@ -54,7 +54,7 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<ResponeInfo>> postCustomerOrder(CustomerOrder customerOrder)
+        public async Task<ActionResult<ResponeInfo>> postCustomerOrder(List<CustomerOrder> customerOrder)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
@@ -184,14 +184,14 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpPut("{OrderID}")]
-        public async Task<ActionResult<ResponeInfo>> putCustomerOrder(long OrderID, CustomerOrder customerOrder)
+        public async Task<ActionResult<ResponeInfo>> putCustomerOrder(List<CustomerOrder> customerOrders)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await orderRepository.updateCustomerOrder(OrderID,customerOrder);
+                ErrorMessageInfo error = await orderRepository.updateCustomerOrder(customerOrders);
                 if (error.isErrorEx || !error.isSuccess)
                 {
                     responeInfo.error_code = error.error_code;
@@ -209,14 +209,14 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpDelete("{OrderID}")]
-        public async Task<ActionResult<ResponeInfo>> deleteCustomerOrder(long OrderID)
+        public async Task<ActionResult<ResponeInfo>> deleteCustomerOrder(List<CustomerOrder> customerOrders)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await orderRepository.deleteCustomerOrder(OrderID);
+                ErrorMessageInfo error = await orderRepository.deleteCustomerOrder(customerOrders);
                 if (error.isErrorEx || !error.isSuccess)
                 {
                     responeInfo.error_code = error.error_code;

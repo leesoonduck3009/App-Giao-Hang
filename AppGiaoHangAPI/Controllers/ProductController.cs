@@ -45,7 +45,7 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpPost("", Name = "PostNewProduct")]
-        public async Task<ActionResult<ResponeInfo>> createNewProduct(Product product)
+        public async Task<ActionResult<ResponeInfo>> createNewProduct(List<Product> product)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
@@ -96,15 +96,15 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpPut("{id}", Name = "UpdateProduct")]
-        public async Task<ActionResult<ResponeInfo>> updateProduct(long id, Product product)
+        [HttpPut("", Name = "UpdateProduct")]
+        public async Task<ActionResult<ResponeInfo>> updateProduct( List<Product> product)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.updateNewProduct(id, product);
+                ErrorMessageInfo error = await productRepository.updateNewProduct(product);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -122,15 +122,15 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpDelete("{id}", Name = "DeleteProduct")]
-        public async Task<ActionResult<ResponeInfo>> deleteProduct(long id)
+        [HttpDelete("", Name = "DeleteProduct")]
+        public async Task<ActionResult<ResponeInfo>> deleteProduct(List<Product> product)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await productRepository.deleteProduct(id);
+                ErrorMessageInfo error = await productRepository.deleteProduct(product);
                 if (error.isErrorEx || !error.isSuccess)
                 {
                     responeInfo.error_code = error.error_code;

@@ -45,14 +45,14 @@ namespace AppGiaoHangAPI.Controllers
         }
         [HttpPost("", Name = "PostNewAccount")]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<ResponeInfo>> createNewAccount(Account account)
+        public async Task<ActionResult<ResponeInfo>> createNewAccount(List<Account> accounts)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await accountRepository.createNewAccount(account);
+                ErrorMessageInfo error = await accountRepository.createNewAccount(accounts);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -97,17 +97,17 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpPut("{id}", Name = "UpdateAccount")]
+        [HttpPut("", Name = "UpdateAccount")]
         [Authorize(Roles = "admin")]
 
-        public async Task<ActionResult<ResponeInfo>> updateAccount(long id, Account account)
+        public async Task<ActionResult<ResponeInfo>> updateAccount(List<Account> accounts)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await accountRepository.updateAccount(id, account);
+                ErrorMessageInfo error = await accountRepository.updateAccount(accounts);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -151,16 +151,16 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpDelete("{id}", Name = "DeleteAccount")]
+        [HttpDelete("", Name = "DeleteAccount")]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<ResponeInfo>> deleteAccount(long id)
+        public async Task<ActionResult<ResponeInfo>> deleteAccount(List<Account> accounts)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await accountRepository.deleteAccount(id);
+                ErrorMessageInfo error = await accountRepository.deleteAccount(accounts);
                 if (error.isErrorEx || !error.isSuccess)
                 {
                     responeInfo.error_code = error.error_code;

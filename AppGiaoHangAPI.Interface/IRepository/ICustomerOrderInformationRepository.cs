@@ -13,8 +13,8 @@ namespace AppGiaoHangAPI.Interface.IRepository
         Task<ErrorMessageInfo> getAllCustomerOrderInformation();
         Task<ErrorMessageInfo> getCustomerOrderInformationByCustomerID(long id);
         Task<ErrorMessageInfo> getCustomerOrderInformationByID(long id);
-        Task<ErrorMessageInfo> createNewCustomerOrderInformation(CustomerOrderInformation customerOrderInformation);
-        Task<ErrorMessageInfo> updateNewCustomerOrderInformation(long CustomerOrderInformationID, CustomerOrderInformation customerOrderInformation);
-        Task<ErrorMessageInfo> deleteCustomerOrderInformation(long CustomerOrderInformationID);
+        Task<ErrorMessageInfo> createNewCustomerOrderInformation(List<CustomerOrderInformation> customerOrderInformations);
+        Task<ErrorMessageInfo> updateNewCustomerOrderInformation(List<CustomerOrderInformation> customerOrderInformations);
+        Task<ErrorMessageInfo> deleteCustomerOrderInformation(List<CustomerOrderInformation> CustomerOrderInformations);
     }
 }

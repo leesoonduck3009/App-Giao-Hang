@@ -13,9 +13,9 @@ namespace AppGiaoHangAPI.Interface.IRepository
         Task<ErrorMessageInfo> getCustomerOrderByCustomerID(long customerID);  
         Task<ErrorMessageInfo> getCustomerOrderByEmployeeID(long employeeID);
         Task<ErrorMessageInfo> getCustomerOrderByOrderID(long customerOrderID);
-        Task<ErrorMessageInfo> postCustomerOrder(CustomerOrder customerOrder);
-        Task<ErrorMessageInfo> deleteCustomerOrder(long customerOrderID);
-        Task<ErrorMessageInfo> updateCustomerOrder(long customerOrderID, CustomerOrder customerOrder);
+        Task<ErrorMessageInfo> postCustomerOrder(List<CustomerOrder> customerOrders);
+        Task<ErrorMessageInfo> deleteCustomerOrder(List<CustomerOrder> customerOrders);
+        Task<ErrorMessageInfo> updateCustomerOrder(List<CustomerOrder> customerOrders);
         Task<ErrorMessageInfo> getAllCustomerOrder();
     }
 }

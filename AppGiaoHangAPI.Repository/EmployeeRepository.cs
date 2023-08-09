@@ -19,41 +19,99 @@ namespace AppGiaoHangAPI.Repository
         {
             connectionString = configuration.GetConnectionString("dbConnection");
         }
-        public async Task<ErrorMessageInfo> createNewEmployee(Employee employee)
+        public async Task<ErrorMessageInfo> createNewEmployee(List<Employee> employees)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
-            if (string.IsNullOrEmpty(employee.EmployeeName)
-                || string.IsNullOrEmpty(employee.PhoneNumber)
-                || string.IsNullOrEmpty(employee.IdentityNumber)
-                || employee.Birthday == null
-                )
+            foreach (Employee employee in employees)
             {
-                errorMessageInfo.message = "Chưa điền đủ thông tin";
-                errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrEmpl002";
-            }
-            else
+                if (string.IsNullOrEmpty(employee.EmployeeName)
+                    || string.IsNullOrEmpty(employee.PhoneNumber)
+                    || string.IsNullOrEmpty(employee.IdentityNumber)
+                    || employee.Birthday == null
+                    )
+                {
+                    errorMessageInfo.message = "Chưa điền đủ thông tin";
+                    errorMessageInfo.isErrorEx = true;
+                    errorMessageInfo.error_code = "ErrEmpl002";
+                }
+                else
+                {
+                    try
+                    {
+                        using (var sqlConnection = new SqlConnection(connectionString))
+                        {
+                            try
+                            {
+                                sqlConnection.Open();
+                                employee.DateJoin = DateTime.Now;
+                                string query = "Insert into Employee(EmployeeName, PhoneNumber, IdentityNumber, Birthday, DateJoin) values (@EmployeeName," +
+                                    "@PhoneNumber, @IdentityNumber, @Birthday, @DateJoin) ";
+                                errorMessageInfo.data = await sqlConnection.ExecuteAsync(query, employee);
+                                errorMessageInfo.isSuccess = true;
+                            }
+                            catch (Exception e)
+                            {
+                                errorMessageInfo.isErrorEx = true;
+                                errorMessageInfo.message = e.Message;
+                                errorMessageInfo.error_code = "ErrEmpl001";
+                                return errorMessageInfo;
+                            }
+                            sqlConnection.Close();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        errorMessageInfo.message = e.Message;
+                        errorMessageInfo.isErrorEx = true;
+                        errorMessageInfo.error_code = "ErrEmpl001";
+                        return errorMessageInfo;
+
+                    }
+                }
+            } 
+            return errorMessageInfo;
+        }
+
+        public async Task<ErrorMessageInfo> deleteNewEmployee(List<Employee> employees)
+        {
+            ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
+            foreach(Employee employee1 in employees)
             {
                 try
                 {
-                    using (var sqlConnection = new SqlConnection(connectionString))
+                    using (SqlConnection sql = new SqlConnection(connectionString))
                     {
                         try
                         {
-                            sqlConnection.Open();
-                            employee.DateJoin = DateTime.Now;
-                            string query = "Insert into Employee(EmployeeName, PhoneNumber, IdentityNumber, Birthday, DateJoin) values (@EmployeeName," +
-                                "@PhoneNumber, @IdentityNumber, @Birthday, @DateJoin) ";
-                            errorMessageInfo.data = await sqlConnection.ExecuteAsync(query, employee);
-                            errorMessageInfo.isSuccess = true;
+                            sql.Open();
+                            DynamicParameters dynamicParameters = new DynamicParameters();
+                            string querySelect = "SELECT * FROM Employee WHERE EmployeeID = @id";
+                            dynamicParameters.Add("id", employee1.EmployeeId);
+                            Employee employee = await sql.QuerySingleOrDefaultAsync<Employee>(querySelect, dynamicParameters);
+                            if (employee == null)
+                            {
+                                errorMessageInfo.isErrorEx = true;
+                                errorMessageInfo.message = "Không có nhân viên này";
+                                errorMessageInfo.error_code = "ErrEmpl003";
+                                return errorMessageInfo;
+
+                            }
+                            else
+                            {
+                                string queryDelete = "DELETE Employee Where EmployeeID = @id";
+                                errorMessageInfo.data = await sql.ExecuteAsync(queryDelete, dynamicParameters);
+                                errorMessageInfo.isSuccess = true;
+                            }
                         }
                         catch (Exception e)
                         {
-                            errorMessageInfo.isErrorEx = true;
                             errorMessageInfo.message = e.Message;
+                            errorMessageInfo.isErrorEx = true;
                             errorMessageInfo.error_code = "ErrEmpl001";
+                            return errorMessageInfo;
+
                         }
-                        sqlConnection.Close();
+                        sql.Close();
                     }
                 }
                 catch (Exception e)
@@ -62,52 +120,52 @@ namespace AppGiaoHangAPI.Repository
                     errorMessageInfo.isErrorEx = true;
                     errorMessageInfo.error_code = "ErrEmpl001";
                 }
-            }
-            return errorMessageInfo;
-        }
-
-        public async Task<ErrorMessageInfo> deleteNewEmployee(long employeeID)
-        {
-            ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
-            try
-            {
-                using (SqlConnection sql = new SqlConnection(connectionString))
+                try
                 {
-                    try
+                    using (SqlConnection sql = new SqlConnection(connectionString))
                     {
-                        sql.Open();
-                        DynamicParameters dynamicParameters = new DynamicParameters();
-                        string querySelect = "SELECT * FROM Employee WHERE EmployeeID = @id";
-                        dynamicParameters.Add("id", employeeID);
-                        Employee employee = await sql.QuerySingleOrDefaultAsync<Employee>(querySelect, dynamicParameters);
-                        if (employee == null)
+                        try
                         {
-                            errorMessageInfo.isErrorEx = true;
-                            errorMessageInfo.message = "Không có nhân viên này";
-                            errorMessageInfo.error_code = "ErrEmpl003";
+                            sql.Open();
+                            DynamicParameters dynamicParameters = new DynamicParameters();
+                            string querySelect = "SELECT * FROM Employee WHERE EmployeeID = @id";
+                            dynamicParameters.Add("id", employee1.EmployeeId);
+                            Employee employee = await sql.QuerySingleOrDefaultAsync<Employee>(querySelect, dynamicParameters);
+                            if (employee == null)
+                            {
+                                errorMessageInfo.isErrorEx = true;
+                                errorMessageInfo.message = "Không có nhân viên này";
+                                errorMessageInfo.error_code = "ErrEmpl003";
+                                return errorMessageInfo;
+
+                            }
+                            else
+                            {
+                                string queryDelete = "DELETE Employee Where EmployeeID = @id";
+                                errorMessageInfo.data = await sql.ExecuteAsync(queryDelete, dynamicParameters);
+                                errorMessageInfo.isSuccess = true;
+                            }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            string queryDelete = "DELETE Employee Where EmployeeID = @id";
-                            errorMessageInfo.data = await sql.ExecuteAsync(queryDelete, dynamicParameters);
-                            errorMessageInfo.isSuccess = true;
-                        }                        
+                            errorMessageInfo.message = e.Message;
+                            errorMessageInfo.isErrorEx = true;
+                            errorMessageInfo.error_code = "ErrEmpl001";
+                            return errorMessageInfo;
+
+                        }
+                        sql.Close();
                     }
-                    catch(Exception e)
-                    {
-                        errorMessageInfo.message = e.Message;
-                        errorMessageInfo.isErrorEx = true;
-                        errorMessageInfo.error_code = "ErrEmpl001";
-                    }
-                    sql.Close();
                 }
-            }
-            catch(Exception e)
-            {
-                errorMessageInfo.message = e.Message;
-                errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrEmpl001";
-            }      
+                catch (Exception e)
+                {
+                    errorMessageInfo.message = e.Message;
+                    errorMessageInfo.isErrorEx = true;
+                    errorMessageInfo.error_code = "ErrEmpl001";
+                    return errorMessageInfo;
+
+                }
+            }                
                 return errorMessageInfo;
         }
 
@@ -158,53 +216,62 @@ namespace AppGiaoHangAPI.Repository
             return errorMessageInfo;
         }
 
-        public async Task<ErrorMessageInfo> updateNewEmployee(long employeeID, Employee employee)
+        public async Task<ErrorMessageInfo> updateNewEmployee(List<Employee> employees)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
-            try
+            foreach(Employee employee in employees)
             {
-                using (SqlConnection sql = new SqlConnection(connectionString))
+
+                try
                 {
-                    try
+                    using (SqlConnection sql = new SqlConnection(connectionString))
                     {
-                        sql.Open();
-                        DynamicParameters dynamicParameters = new DynamicParameters();
-                        string querySelect = "SELECT * FROM Employee WHERE EmployeeID = @id";
-                        dynamicParameters.Add("id", employeeID);
-                        Employee employeeFind = await sql.QuerySingleOrDefaultAsync<Employee>(querySelect, dynamicParameters);
-                        if (employeeFind == null)
+                        try
                         {
+                            sql.Open();
+                            DynamicParameters dynamicParameters = new DynamicParameters();
+                            string querySelect = "SELECT * FROM Employee WHERE EmployeeID = @id";
+                            dynamicParameters.Add("id", employee.EmployeeId);
+                            Employee employeeFind = await sql.QuerySingleOrDefaultAsync<Employee>(querySelect, dynamicParameters);
+                            if (employeeFind == null)
+                            {
+                                errorMessageInfo.isErrorEx = true;
+                                errorMessageInfo.message = "Không có nhân viên này";
+                                errorMessageInfo.error_code = "ErrEmpl003";
+                                return errorMessageInfo;
+                            }
+                            else
+                            {
+                                employee.EmployeeCode = employeeFind.EmployeeCode;
+                                employee.EmployeeId = employeeFind.EmployeeId;
+                                string queryDelete = "UPDATE Employee   " +
+                                    "SET Birthday = @Birthday, EmployeeName = @EmployeeName, IdentityNumber = @IdentityNumber " +
+                                    "Where EmployeeID = @EmployeeId";
+                                errorMessageInfo.data = await sql.ExecuteAsync(queryDelete, employee);
+                                errorMessageInfo.isSuccess = true;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            errorMessageInfo.message = e.Message;
                             errorMessageInfo.isErrorEx = true;
-                            errorMessageInfo.message = "Không có nhân viên này";
-                            errorMessageInfo.error_code = "ErrEmpl003";
+                            errorMessageInfo.error_code = "ErrEmpl001";
+                            return errorMessageInfo;
+
                         }
-                        else
-                        {
-                            employee.EmployeeCode = employeeFind.EmployeeCode;
-                            employee.EmployeeId = employeeFind.EmployeeId;
-                            string queryDelete = "UPDATE Employee   " +
-                                "SET Birthday = @Birthday, EmployeeName = @EmployeeName, IdentityNumber = @IdentityNumber " +
-                                "Where EmployeeID = @EmployeeId";
-                            errorMessageInfo.data = await sql.ExecuteAsync(queryDelete, employee);
-                            errorMessageInfo.isSuccess = true;
-                        }
+                        sql.Close();
                     }
-                    catch (Exception e)
-                    {
-                        errorMessageInfo.message = e.Message;
-                        errorMessageInfo.isErrorEx = true;
-                        errorMessageInfo.error_code = "ErrEmpl001";
-                    }
-                    sql.Close();
+                }
+                catch (Exception e)
+                {
+                    errorMessageInfo.message = e.Message;
+                    errorMessageInfo.isErrorEx = true;
+                    errorMessageInfo.error_code = "ErrEmpl001";
+                    return errorMessageInfo;
+
                 }
             }
-            catch (Exception e)
-            {
-                errorMessageInfo.message = e.Message;
-                errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrEmpl001";
-            }
-            return errorMessageInfo;
+                return errorMessageInfo;
         }
     }
 }

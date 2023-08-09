@@ -9,7 +9,7 @@ namespace AppGiaoHangAPI.Controllers
 {
     [Route("api/customer")]
     [ApiController]  
-    [Authorize]
+    //[Authorize]
 
     public class CustomerController : ControllerBase
     {
@@ -45,7 +45,7 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpPost("", Name = "PostNewCustomer")]
-        public async Task<ActionResult<ResponeInfo>> createNewCustomer(Customer customer)
+        public async Task<ActionResult<ResponeInfo>> createNewCustomer(List<Customer> customer)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
@@ -96,15 +96,15 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpPut("{id}", Name = "UpdateCustomer")]
-        public async Task<ActionResult<ResponeInfo>> updateCustomer(long id, Customer customer)
+        [HttpPut("", Name = "UpdateCustomer")]
+        public async Task<ActionResult<ResponeInfo>> updateCustomer(List<Customer> customers)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await customerRepository.updateNewCustomer(id, customer);
+                ErrorMessageInfo error = await customerRepository.updateNewCustomer(customers);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -122,15 +122,15 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpDelete("{id}", Name = "DeleteCustomer")]
-        public async Task<ActionResult<ResponeInfo>> deleteCustomer(long id)
+        [HttpDelete("", Name = "DeleteCustomer")]
+        public async Task<ActionResult<ResponeInfo>> deleteCustomer(List<Customer> customers)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await customerRepository.deleteCustomer(id);
+                ErrorMessageInfo error = await customerRepository.deleteCustomer(customers);
                 if (error.isErrorEx || !error.isSuccess)
                 {
                     responeInfo.error_code = error.error_code;

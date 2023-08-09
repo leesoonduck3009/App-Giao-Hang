@@ -22,89 +22,55 @@ namespace AppGiaoHangAPI.Repository
             connectionString = configuration.GetConnectionString("dbConnection");
             db = quanLyGiaoHang;
         }
-        public async Task<ErrorMessageInfo> createNewCustomerOrderInformation(CustomerOrderInformation customerOrderInformation)
+        public async Task<ErrorMessageInfo> createNewCustomerOrderInformation(List<CustomerOrderInformation> customerOrderInformations)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
-            if (string.IsNullOrEmpty(customerOrderInformation.PhoneNumber)
-                || string.IsNullOrEmpty(customerOrderInformation.Address)
-                || customerOrderInformation.CustomerId == null
-                )
+            foreach (var customerOrderInformation in customerOrderInformations)
             {
-                errorMessageInfo.message = "Chưa điền đủ thông tin";
-                errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrCusInfo002";
-            }
-            else
-            {
-                
-                try
+                if (string.IsNullOrEmpty(customerOrderInformation.PhoneNumber)
+                    || string.IsNullOrEmpty(customerOrderInformation.Address)
+                    || customerOrderInformation.CustomerId == null
+                    )
                 {
-                    if (db.Customers.FindAsync(customerOrderInformation.CustomerId) == null)
-                    {
-                        errorMessageInfo.message = "Không tồn tại khách hàng này";
-                        errorMessageInfo.error_code = "ErrCusInfo003";
-                        errorMessageInfo.isErrorEx = true;
-
-                    }
-                    else
-                    {
-                        using (var sqlConnection = new SqlConnection(connectionString))
-                        {
-                            try
-                            {
-                                sqlConnection.Open();
-                                string query = "Insert into CustomerOrderInformation (CustomerID,Address,PhoneNumber) " +
-                                    "VALUES(@CustomerId, @Address, @PhoneNumber) ";
-                                errorMessageInfo.data = await sqlConnection.ExecuteAsync(query, customerOrderInformation);
-                                errorMessageInfo.isSuccess = true;
-                                errorMessageInfo.message = "Insert Success";
-                            }
-                            catch (Exception e)
-                            {
-                                errorMessageInfo.isErrorEx = true;
-                                errorMessageInfo.message = e.Message;
-                                errorMessageInfo.error_code = "ErrCusInfo001";
-                            }
-                            sqlConnection.Close();
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    errorMessageInfo.message = e.Message;
+                    errorMessageInfo.message = "Chưa điền đủ thông tin";
                     errorMessageInfo.isErrorEx = true;
-                    errorMessageInfo.error_code = "ErrCusInfo001";
+                    errorMessageInfo.error_code = "ErrCusInfo002";
+                    return errorMessageInfo;
                 }
-            }
-            return errorMessageInfo;
-        }
-
-        public async Task<ErrorMessageInfo> deleteCustomerOrderInformation(long CustomerOrderInformationID)
-        {
-            ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
-            try
-            {
-                using (SqlConnection sql = new SqlConnection(connectionString))
+                else
                 {
+
                     try
                     {
-                        sql.Open();
-                        DynamicParameters dynamicParameters = new DynamicParameters();
-                        string querySelect = "SELECT * FROM CustomerOrderInformation WHERE CustomerOrderInformationID = @id";
-                        dynamicParameters.Add("id", CustomerOrderInformationID);
-                        Customer customer = await sql.QuerySingleOrDefaultAsync<Customer>(querySelect, dynamicParameters);
-                        if (customer == null)
+                        if (db.Customers.FindAsync(customerOrderInformation.CustomerId) == null)
                         {
-                            errorMessageInfo.isErrorEx = true;
-                            errorMessageInfo.message = "Không có thông tin khách hàng này";
+                            errorMessageInfo.message = "Không tồn tại khách hàng này";
                             errorMessageInfo.error_code = "ErrCusInfo003";
+                            errorMessageInfo.isErrorEx = true;
+                            return errorMessageInfo;
                         }
                         else
                         {
-                            string queryDelete = "DELETE CustomerOrderInformation Where CustomerOrderInformationID = @id";
-                            errorMessageInfo.message = "Xóa khách hàng thành công";
-                            errorMessageInfo.data = await sql.ExecuteAsync(queryDelete, dynamicParameters);
-                            errorMessageInfo.isSuccess = true;
+                            using (var sqlConnection = new SqlConnection(connectionString))
+                            {
+                                try
+                                {
+                                    sqlConnection.Open();
+                                    string query = "Insert into CustomerOrderInformation (CustomerID,Address,PhoneNumber) " +
+                                        "VALUES(@CustomerId, @Address, @PhoneNumber) ";
+                                    errorMessageInfo.data = await sqlConnection.ExecuteAsync(query, customerOrderInformation);
+                                    errorMessageInfo.isSuccess = true;
+                                    errorMessageInfo.message = "Insert Success";
+                                }
+                                catch (Exception e)
+                                {
+                                    errorMessageInfo.isErrorEx = true;
+                                    errorMessageInfo.message = e.Message;
+                                    errorMessageInfo.error_code = "ErrCusInfo001";
+                                    return errorMessageInfo;
+                                }
+                                sqlConnection.Close();
+                            }
                         }
                     }
                     catch (Exception e)
@@ -112,15 +78,62 @@ namespace AppGiaoHangAPI.Repository
                         errorMessageInfo.message = e.Message;
                         errorMessageInfo.isErrorEx = true;
                         errorMessageInfo.error_code = "ErrCusInfo001";
+                        return errorMessageInfo;
+
                     }
-                    sql.Close();
                 }
             }
-            catch (Exception e)
+            return errorMessageInfo;
+        }
+
+        public async Task<ErrorMessageInfo> deleteCustomerOrderInformation(List<CustomerOrderInformation> customerOrderInformations)
+        {
+            ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
+            foreach (var customerOrderInformation in customerOrderInformations)
             {
-                errorMessageInfo.message = e.Message;
-                errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrCusInfo001";
+                try
+                {
+                    using (SqlConnection sql = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            sql.Open();
+                            DynamicParameters dynamicParameters = new DynamicParameters();
+                            string querySelect = "SELECT * FROM CustomerOrderInformation WHERE CustomerOrderInformationID = @id";
+                            dynamicParameters.Add("id", customerOrderInformation.CustomerOrderInformationId);
+                            Customer customer = await sql.QuerySingleOrDefaultAsync<Customer>(querySelect, dynamicParameters);
+                            if (customer == null)
+                            {
+                                errorMessageInfo.isErrorEx = true;
+                                errorMessageInfo.message = "Không có thông tin khách hàng này";
+                                errorMessageInfo.error_code = "ErrCusInfo003";
+                                return errorMessageInfo;
+                            }
+                            else
+                            {
+                                string queryDelete = "DELETE CustomerOrderInformation Where CustomerOrderInformationID = @id";
+                                errorMessageInfo.message = "Xóa khách hàng thành công";
+                                errorMessageInfo.data = await sql.ExecuteAsync(queryDelete, dynamicParameters);
+                                errorMessageInfo.isSuccess = true;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            errorMessageInfo.message = e.Message;
+                            errorMessageInfo.isErrorEx = true;
+                            errorMessageInfo.error_code = "ErrCusInfo001";
+                            return errorMessageInfo;
+                        }
+                        sql.Close();
+                    }
+                }
+                catch (Exception e)
+                {
+                    errorMessageInfo.message = e.Message;
+                    errorMessageInfo.isErrorEx = true;
+                    errorMessageInfo.error_code = "ErrCusInfo001";
+                    return errorMessageInfo;
+                }
             }
             return errorMessageInfo;
         }
@@ -194,50 +207,52 @@ namespace AppGiaoHangAPI.Repository
             }
             return errorMessageInfo;
         }
-        public async Task<ErrorMessageInfo> updateNewCustomerOrderInformation(long CustomerOrderInformationID, CustomerOrderInformation customerOrderInformation)
+        public async Task<ErrorMessageInfo> updateNewCustomerOrderInformation(List<CustomerOrderInformation> customerOrderInformations)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
-            try
+            foreach (CustomerOrderInformation customerOrderInformation in customerOrderInformations)
             {
-                using (SqlConnection sql = new SqlConnection(connectionString))
+                try
                 {
-                    try
+                    using (SqlConnection sql = new SqlConnection(connectionString))
                     {
-                        sql.Open();
-                        DynamicParameters dynamicParameters = new DynamicParameters();
-                        string querySelect = "SELECT * FROM CustomerOrderInformation WHERE CustomerOrderInformationID = @id";
-                        dynamicParameters.Add("id", CustomerOrderInformationID);
-                        customerOrderInformation.CustomerOrderInformationId = CustomerOrderInformationID;
-                        Customer customerFind = await sql.QuerySingleOrDefaultAsync<Customer>(querySelect, dynamicParameters);
-                        if (customerFind == null)
+                        try
                         {
+                            sql.Open();
+                            DynamicParameters dynamicParameters = new DynamicParameters();
+                            string querySelect = "SELECT * FROM CustomerOrderInformation WHERE CustomerOrderInformationID = @id";
+                            dynamicParameters.Add("id", customerOrderInformation.CustomerOrderInformationId);
+                            Customer customerFind = await sql.QuerySingleOrDefaultAsync<Customer>(querySelect, dynamicParameters);
+                            if (customerFind == null)
+                            {
+                                errorMessageInfo.isErrorEx = true;
+                                errorMessageInfo.message = "Không có thông tin khách hàng này";
+                                errorMessageInfo.error_code = "ErrCusInfo003";
+                            }
+                            else
+                            {
+                                string queryUpdate = "UPDATE CustomerOrderInformation   " +
+                                    "SET Address = @Address, PhoneNumber = @PhoneNumber " +
+                                    "Where CustomerOrderInformationID = @CustomerOrderInformationId";
+                                errorMessageInfo.data = await sql.ExecuteAsync(queryUpdate, customerOrderInformation);
+                                errorMessageInfo.isSuccess = true;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            errorMessageInfo.message = e.Message;
                             errorMessageInfo.isErrorEx = true;
-                            errorMessageInfo.message = "Không có thông tin khách hàng này";
-                            errorMessageInfo.error_code = "ErrCusInfo003";
+                            errorMessageInfo.error_code = "ErrCusInfo001";
                         }
-                        else
-                        {                           
-                            string queryUpdate = "UPDATE CustomerOrderInformation   " +
-                                "SET Address = @Address, PhoneNumber = @PhoneNumber " +
-                                "Where CustomerOrderInformationID = @CustomerOrderInformationId";
-                            errorMessageInfo.data = await sql.ExecuteAsync(queryUpdate, customerOrderInformation);
-                            errorMessageInfo.isSuccess = true;
-                        }
+                        sql.Close();
                     }
-                    catch (Exception e)
-                    {
-                        errorMessageInfo.message = e.Message;
-                        errorMessageInfo.isErrorEx = true;
-                        errorMessageInfo.error_code = "ErrCusInfo001";
-                    }
-                    sql.Close();
                 }
-            }
-            catch (Exception e)
-            {
-                errorMessageInfo.message = e.Message;
-                errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrCusInfo001";
+                catch (Exception e)
+                {
+                    errorMessageInfo.message = e.Message;
+                    errorMessageInfo.isErrorEx = true;
+                    errorMessageInfo.error_code = "ErrCusInfo001";
+                }
             }
             return errorMessageInfo;
         }

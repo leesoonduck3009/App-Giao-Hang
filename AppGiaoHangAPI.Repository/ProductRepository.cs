@@ -19,54 +19,63 @@ namespace AppGiaoHangAPI.Repository
         {
             connectionString = configuration.GetConnectionString("dbConnection");
         }
-        public async Task<ErrorMessageInfo> createNewProduct(Product product)
+        public async Task<ErrorMessageInfo> createNewProduct(List<Product> products)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
-            if (string.IsNullOrEmpty(product.ProductName) || 
-                product.Price == null
-                )
+            foreach(Product product in products)
             {
-                errorMessageInfo.message = "Chưa điền đủ thông tin";
-                errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrPro002";
-            }
-            else
-            {
-                try
+
+                if (string.IsNullOrEmpty(product.ProductName) || 
+                    product.Price == null
+                    )
                 {
-                    using (var sqlConnection = new SqlConnection(connectionString))
-                    {
-                        try
-                        {
-                            sqlConnection.Open();
-                            string query = "INSERT INTO Product(ProductName,Price,Description)" +
-                                " VALUES (@ProductName, @Price, @Description)";
- 
-                            errorMessageInfo.data = await sqlConnection.ExecuteAsync(query, product);
-                            errorMessageInfo.isSuccess = true;
-                        }
-                        catch (Exception e)
-                        {
-                            errorMessageInfo.isErrorEx = true;
-                            errorMessageInfo.message = e.Message;
-                            errorMessageInfo.error_code = "ErrPro001";
-                        }
-                        sqlConnection.Close();
-                    }
-                }
-                catch (Exception e)
-                {
-                    errorMessageInfo.message = e.Message;
+                    errorMessageInfo.message = "Chưa điền đủ thông tin";
                     errorMessageInfo.isErrorEx = true;
-                    errorMessageInfo.error_code = "ErrPro001";
+                    errorMessageInfo.error_code = "ErrPro002";
+                    return errorMessageInfo;
+                }
+                else
+                {
+                    try
+                    {
+                        using (var sqlConnection = new SqlConnection(connectionString))
+                        {
+                            try
+                            {
+                                sqlConnection.Open();
+                                string query = "INSERT INTO Product(ProductName,Price,Description)" +
+                                    " VALUES (@ProductName, @Price, @Description)";
+ 
+                                errorMessageInfo.data = await sqlConnection.ExecuteAsync(query, product);
+                                errorMessageInfo.isSuccess = true;
+                            }
+                            catch (Exception e)
+                            {
+                                errorMessageInfo.isErrorEx = true;
+                                errorMessageInfo.message = e.Message;
+                                errorMessageInfo.error_code = "ErrPro001";
+                                return errorMessageInfo;
+
+                            }
+                            sqlConnection.Close();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        errorMessageInfo.message = e.Message;
+                        errorMessageInfo.isErrorEx = true;
+                        errorMessageInfo.error_code = "ErrPro001";
+                        return errorMessageInfo;
+                    }
                 }
             }
             return errorMessageInfo;
         }
 
-        public async Task<ErrorMessageInfo> deleteProduct(long productID)
+        public async Task<ErrorMessageInfo> deleteProduct(List<Product> products)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
+            foreach(Product product1 in products)
             try
             {
                 using (SqlConnection sql = new SqlConnection(connectionString))
@@ -76,15 +85,17 @@ namespace AppGiaoHangAPI.Repository
                         sql.Open();
                         DynamicParameters dynamicParameters = new DynamicParameters();
                         string querySelect = "SELECT * FROM Product WHERE ProductID = @id";
-                        dynamicParameters.Add("id", productID);
+                        dynamicParameters.Add("id", product1.ProductId);
                         Product product = await sql.QuerySingleOrDefaultAsync<Product>(querySelect, dynamicParameters);
                         if (product == null)
                         {
                             errorMessageInfo.isErrorEx = true;
                             errorMessageInfo.message = "Không có khách hàng này";
                             errorMessageInfo.error_code = "ErrPro003";
-                        }
-                        else
+                            return errorMessageInfo;
+
+                            }
+                            else
                         {
                             string queryDelete = "DELETE Product Where ProductID = @id";
                             errorMessageInfo.message = "Xóa khách hàng thành công";
@@ -97,6 +108,7 @@ namespace AppGiaoHangAPI.Repository
                         errorMessageInfo.message = e.Message;
                         errorMessageInfo.isErrorEx = true;
                         errorMessageInfo.error_code = "ErrPro001";
+                        return errorMessageInfo;
                     }
                     sql.Close();
                 }
@@ -106,6 +118,7 @@ namespace AppGiaoHangAPI.Repository
                 errorMessageInfo.message = e.Message;
                 errorMessageInfo.isErrorEx = true;
                 errorMessageInfo.error_code = "ErrPro001";
+                return errorMessageInfo;
             }
             return errorMessageInfo;
         }
@@ -159,51 +172,57 @@ namespace AppGiaoHangAPI.Repository
             return errorMessageInfo;
         }
 
-        public async Task<ErrorMessageInfo> updateNewProduct(long productID, Product product)
+        public async Task<ErrorMessageInfo> updateNewProduct(List<Product> products)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
-            try
+            foreach (Product product in products)
             {
-                using (SqlConnection sql = new SqlConnection(connectionString))
+                try
                 {
-                    try
+                    using (SqlConnection sql = new SqlConnection(connectionString))
                     {
-                        sql.Open();
-                        DynamicParameters dynamicParameters = new DynamicParameters();
-                        string querySelect = "SELECT * FROM Product WHERE ProductID = @id";
-                        dynamicParameters.Add("id", productID);
-                        Product productFind = await sql.QuerySingleOrDefaultAsync<Product>(querySelect, dynamicParameters);
-                        if (productFind == null)
+                        try
                         {
+                            sql.Open();
+                            DynamicParameters dynamicParameters = new DynamicParameters();
+                            string querySelect = "SELECT * FROM Product WHERE ProductID = @id";
+                            dynamicParameters.Add("id", product.ProductId);
+                            Product productFind = await sql.QuerySingleOrDefaultAsync<Product>(querySelect, dynamicParameters);
+                            if (productFind == null)
+                            {
+                                errorMessageInfo.isErrorEx = true;
+                                errorMessageInfo.message = "Không có sảng phẩm này";
+                                errorMessageInfo.error_code = "ErrPro003";
+                                return errorMessageInfo;
+                            }
+                            else
+                            {
+                                if (string.IsNullOrEmpty(product.Description))
+                                    product.Description = "";
+                                string queryUpdate = "UPDATE Product   " +
+                                    "SET ProductName = @ProductName, Price = @Price, Description = @Description " +
+                                    "Where ProductID = @ProductID";
+                                errorMessageInfo.data = await sql.ExecuteAsync(queryUpdate, product);
+                                errorMessageInfo.isSuccess = true;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            errorMessageInfo.message = e.Message;
                             errorMessageInfo.isErrorEx = true;
-                            errorMessageInfo.message = "Không có sảng phẩm này";
-                            errorMessageInfo.error_code = "ErrPro003";
+                            errorMessageInfo.error_code = "ErrPro001";
+                            return errorMessageInfo;
                         }
-                        else
-                        {
-                            if (string.IsNullOrEmpty(product.Description))
-                                product.Description = "";
-                            string queryUpdate = "UPDATE Product   " +
-                                "SET ProductName = @ProductName, Price = @Price, Description = @Description " +
-                                "Where ProductID = @ProductID";               
-                            errorMessageInfo.data = await sql.ExecuteAsync(queryUpdate, product);
-                            errorMessageInfo.isSuccess = true;
-                        }
+                        sql.Close();
                     }
-                    catch (Exception e)
-                    {
-                        errorMessageInfo.message = e.Message;
-                        errorMessageInfo.isErrorEx = true;
-                        errorMessageInfo.error_code = "ErrPro001";
-                    }
-                    sql.Close();
                 }
-            }
-            catch (Exception e)
-            {
-                errorMessageInfo.message = e.Message;
-                errorMessageInfo.isErrorEx = true;
-                errorMessageInfo.error_code = "ErrPro001";
+                catch (Exception e)
+                {
+                    errorMessageInfo.message = e.Message;
+                    errorMessageInfo.isErrorEx = true;
+                    errorMessageInfo.error_code = "ErrPro001";
+                    return errorMessageInfo;
+                }
             }
             return errorMessageInfo;
         }

@@ -12,8 +12,8 @@ namespace AppGiaoHangAPI.Interface.IRepository
     {
         Task<ErrorMessageInfo> getAllCustomer();
         Task<ErrorMessageInfo> getCustomerByID(long id);
-        Task<ErrorMessageInfo> createNewCustomer(Customer customer);
-        Task<ErrorMessageInfo> updateNewCustomer(long customerID, Customer employee);
-        Task<ErrorMessageInfo> deleteCustomer(long customerID);
+        Task<ErrorMessageInfo> createNewCustomer(List<Customer> customer);
+        Task<ErrorMessageInfo> updateNewCustomer(List<Customer> customers);
+        Task<ErrorMessageInfo> deleteCustomer(List<Customer> customers);
     }
 }

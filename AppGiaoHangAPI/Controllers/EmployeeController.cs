@@ -46,7 +46,7 @@ namespace AppGiaoHangAPI.Controllers
         }
         [HttpPost("", Name = "PostNewEmployee")]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<ResponeInfo>> createNewEmployee(Employee employee)
+        public async Task<ActionResult<ResponeInfo>> createNewEmployee(List<Employee> employee)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
@@ -97,15 +97,15 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpPut("{id}", Name = "UpdateEmployee")]
-        public async Task<ActionResult<ResponeInfo>> updateEmployee(long id, Employee employee)
+        [HttpPut("", Name = "UpdateEmployee")]
+        public async Task<ActionResult<ResponeInfo>> updateEmployee(List<Employee> employee)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await employeeRepository.updateNewEmployee(id, employee);
+                ErrorMessageInfo error = await employeeRepository.updateNewEmployee(employee);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 
@@ -123,16 +123,16 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
-        [HttpDelete("{id}", Name = "DeleteEmployee")]
+        [HttpDelete("", Name = "DeleteEmployee")]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<ResponeInfo>> deleteEmployee(long id)
+        public async Task<ActionResult<ResponeInfo>> deleteEmployee(List<Employee> employees)
         {
             ResponeInfo responeInfo = new ResponeInfo();
             try
             {
                 responeInfo.statusCode = System.Net.HttpStatusCode.OK;
                 Stream a = HttpContext.Request.Body;
-                ErrorMessageInfo error = await employeeRepository.deleteNewEmployee(id);
+                ErrorMessageInfo error = await employeeRepository.deleteNewEmployee(employees);
                 if (error.isErrorEx || !error.isSuccess)
                 {
 

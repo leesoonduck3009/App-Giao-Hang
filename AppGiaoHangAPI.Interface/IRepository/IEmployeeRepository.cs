@@ -12,9 +12,9 @@ namespace AppGiaoHangAPI.Interface.IRepository
     {
         Task<ErrorMessageInfo> getAllEmployee();
         Task<ErrorMessageInfo> getEmployeeByID(long id);
-        Task<ErrorMessageInfo> createNewEmployee(Employee employee);
-        Task<ErrorMessageInfo> updateNewEmployee(long employeeID,Employee employee);
-        Task<ErrorMessageInfo> deleteNewEmployee(long employeeID);
+        Task<ErrorMessageInfo> createNewEmployee(List<Employee> employees);
+        Task<ErrorMessageInfo> updateNewEmployee(List<Employee> employees);
+        Task<ErrorMessageInfo> deleteNewEmployee(List<Employee> employees);
 
     }
 }
