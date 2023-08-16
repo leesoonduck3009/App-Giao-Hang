@@ -43,4 +43,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0' // Replace x.x.x with the converter-gson version you want to use
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
 }

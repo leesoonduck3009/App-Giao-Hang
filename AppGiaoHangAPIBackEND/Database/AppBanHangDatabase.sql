@@ -57,6 +57,7 @@ CREATE TABLE CustomerOrder(
 	EmployeeID BIGINT,
 	TotalPrice FLOAT Default 0,
 	OrderStatus NVARCHAR(max),
+	LinkImage varchar(max),
 	Constraint PKCustomerOrder_ID PRIMARY KEY(CustomerOrderID),
 	Constraint FKCustomerOrder_CustomerOrderInformationID FOREIGN KEY(CustomerOrderInformationID) REFERENCES CustomerOrderInformation(CustomerOrderInformationID),
 	Constraint FKCustomerOrder_EmployeeID FOREIGN KEY(EmployeeID) REFERENCES Employee(EmployeeID)

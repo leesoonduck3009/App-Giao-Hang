@@ -5,7 +5,7 @@ import com.pnb309.appgiaohang_android.Entity.CustomerOrder;
 import java.util.List;
 
 public interface ICustomerOrderModel {
-    void LoadCustomerOrderByEmployeeID(long id, OnLoadCustomerOrderByEmployeeIDListener listener);
+    void LoadCustomerOrderByEmployeeIDAndStatus(long id,String status, OnLoadCustomerOrderByEmployeeIDListener listener);
     interface OnLoadCustomerOrderByEmployeeIDListener{
        void OnFinishLoadCustomerOrderByEmployeeID(List<CustomerOrder> customerOrderList);
     }

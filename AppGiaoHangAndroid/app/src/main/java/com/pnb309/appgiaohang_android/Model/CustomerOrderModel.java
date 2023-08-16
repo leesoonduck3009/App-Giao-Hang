@@ -23,8 +23,11 @@ public class CustomerOrderModel implements ICustomerOrderModel {
     }
 
     @Override
-    public void LoadCustomerOrderByEmployeeID(long id, OnLoadCustomerOrderByEmployeeIDListener listener) {
-        customerOrderServices.getCustomerOrderByEmployeeID(id).enqueue(new Callback<ResponseInfo>() {
+    public void LoadCustomerOrderByEmployeeIDAndStatus(long id,String status, OnLoadCustomerOrderByEmployeeIDListener listener) {
+        CustomerOrder customerOrder = new CustomerOrder();
+        customerOrder.setEmployeeId(id);
+        customerOrder.setOrderStatus(status);
+        customerOrderServices.getCustomerOrderByEmployeeIDAndStatus(customerOrder).enqueue(new Callback<ResponseInfo>() {
             @Override
             public void onResponse(Call<ResponseInfo> call, Response<ResponseInfo> response) {
                 if(response.isSuccessful() && response.code() == 200)

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/orderOnGoingMenu"
+        android:title="Đơn đang giao" />
+    <item
+        android:id="@+id/orderCancledMenu"
+        android:title="Đơn hoàn thành" />
+    <item
+        android:id="@+id/orderFinishMenu"
+        android:title="Đơn đã hủy" />
+</menu>

@@ -17,5 +17,6 @@ namespace AppGiaoHangAPI.Interface.IRepository
         Task<ErrorMessageInfo> deleteCustomerOrder(List<CustomerOrder> customerOrders);
         Task<ErrorMessageInfo> updateCustomerOrder(List<CustomerOrder> customerOrders);
         Task<ErrorMessageInfo> getAllCustomerOrder();
+        Task<ErrorMessageInfo> getAllCustomerOrderByOrderStatusAndEmployeeID(CustomerOrder customerOrder);
     }
 }

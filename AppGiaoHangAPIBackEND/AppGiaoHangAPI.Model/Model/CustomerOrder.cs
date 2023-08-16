@@ -17,6 +17,7 @@ namespace AppGiaoHangAPI.Model.Model
         public long? EmployeeId { get; set; }
         public double? TotalPrice { get; set; }
         public string? OrderStatus { get; set; }
+        public string? LinkImage { get; set; }
 
         public virtual CustomerOrderInformation? CustomerOrderInformation { get; set; }
         public virtual Employee? Employee { get; set; }

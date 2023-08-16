@@ -60,8 +60,15 @@ public class AccountModel implements IAccountModel{
                     if (response.isSuccessful() && response.code() == 200) {
                         ResponseInfo responseInfo = response.body();
                         assert responseInfo != null;
-                        Date a = TokenVariable.getTokenExpiredTime(responseInfo.getData().toString());
-                        listener.OnLoginListener(responseInfo.getData().toString(), null);
+                        if(!responseInfo.getData().toString().isEmpty()) {
+                            try {
+                                TokenVariable.token = responseInfo.getData().toString();
+                                TokenVariable.setTokenExpiredTime();
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+                            listener.OnLoginListener(responseInfo.getData().toString(), null);
+                        }
                     }
                 }
 
@@ -76,25 +83,6 @@ public class AccountModel implements IAccountModel{
             e.printStackTrace();
         }
     }
-    public class LoginAccount{
-        private String UserName;
-        private String Password;
 
-        public String getUserName() {
-            return UserName;
-        }
-
-        public void setUserName(String userName) {
-            UserName = userName;
-        }
-
-        public String getPassword() {
-            return Password;
-        }
-
-        public void setPassword(String password) {
-            Password = password;
-        }
-    }
 }
 

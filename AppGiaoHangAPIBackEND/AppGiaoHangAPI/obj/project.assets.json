@@ -2458,11 +2458,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPI\\AppGiaoHangAPI.csproj",
+      "projectUniqueName": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI\\AppGiaoHangAPI.csproj",
       "projectName": "AppGiaoHangAPI",
-      "projectPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPI\\AppGiaoHangAPI.csproj",
+      "projectPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI\\AppGiaoHangAPI.csproj",
       "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
-      "outputPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPI\\obj\\",
+      "outputPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2479,14 +2479,14 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPI.Interface\\AppGiaoHangAPI.Interface.csproj": {
-              "projectPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPI.Interface\\AppGiaoHangAPI.Interface.csproj"
+            "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI.Interface\\AppGiaoHangAPI.Interface.csproj": {
+              "projectPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI.Interface\\AppGiaoHangAPI.Interface.csproj"
             },
-            "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPI.Model\\AppGiaoHangAPI.Model.csproj": {
-              "projectPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPI.Model\\AppGiaoHangAPI.Model.csproj"
+            "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI.Model\\AppGiaoHangAPI.Model.csproj": {
+              "projectPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI.Model\\AppGiaoHangAPI.Model.csproj"
             },
-            "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPI.Repository\\AppGiaoHangAPI.Repository.csproj": {
-              "projectPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPI.Repository\\AppGiaoHangAPI.Repository.csproj"
+            "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI.Repository\\AppGiaoHangAPI.Repository.csproj": {
+              "projectPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI.Repository\\AppGiaoHangAPI.Repository.csproj"
             }
           }
         }

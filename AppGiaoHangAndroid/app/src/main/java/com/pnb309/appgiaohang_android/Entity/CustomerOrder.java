@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 public class CustomerOrder {
+    public static final String ORDER_ONGOING = "Ðang giao";
+    public static final String ORDER_CANCLED = "Đã hủy";
+    public static final String ORDER_FINISH = "Đã hoàn thành";
     public CustomerOrder() {
         CustomerOrderDetails = new ArrayList<>();
     }
@@ -15,7 +18,6 @@ public class CustomerOrder {
     private Long EmployeeId;
     private Double TotalPrice;
     private String OrderStatus;
-
     private CustomerOrderInformation CustomerOrderInformation;
     private Employee Employee;
     private List<CustomerOrderDetail> CustomerOrderDetails;

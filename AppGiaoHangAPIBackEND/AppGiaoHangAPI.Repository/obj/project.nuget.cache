@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zRv5O3bnGPZF+yiGB6T41rMD1i0eU7o6hVSoNH+Sm0fD6BIkRmd6ig7Kt+nmGb0QmDwCGnxAMwUdc48T4kFQbQ==",
+  "dgSpecHash": "/YOWPTQgbMUF1GnwahL7jLWBH1eQeW9FvVEqXeg6qXI3/k0I4CW26+gNF8vVLMwpVcMFYL37jQNaPBQ+2GwxyA==",
   "success": true,
-  "projectFilePath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPI.Repository\\AppGiaoHangAPI.Repository.csproj",
+  "projectFilePath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI.Repository\\AppGiaoHangAPI.Repository.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\acer\\.nuget\\packages\\dapper\\2.0.143\\dapper.2.0.143.nupkg.sha512",
     "C:\\Users\\acer\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
