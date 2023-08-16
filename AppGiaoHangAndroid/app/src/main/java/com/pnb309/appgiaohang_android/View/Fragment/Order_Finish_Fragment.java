@@ -3,64 +3,79 @@ package com.pnb309.appgiaohang_android.View.Fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.pnb309.appgiaohang_android.Adapter.OrderAdapter;
+import com.pnb309.appgiaohang_android.Contract.IOrderCancelledContract;
+import com.pnb309.appgiaohang_android.Contract.IOrderFinishedContract;
+import com.pnb309.appgiaohang_android.Entity.CustomerOrder;
+import com.pnb309.appgiaohang_android.Presenter.OrderCancelledPresenter;
+import com.pnb309.appgiaohang_android.Presenter.OrderFinishedPresenter;
 import com.pnb309.appgiaohang_android.R;
+import com.pnb309.appgiaohang_android.Ultilities.DateTypeAdapter;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Order_Finish_Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Order_Finish_Fragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public Order_Finish_Fragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Order_Finish_Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Order_Finish_Fragment newInstance(String param1, String param2) {
-        Order_Finish_Fragment fragment = new Order_Finish_Fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+public class Order_Finish_Fragment extends Fragment implements IOrderFinishedContract.View {
+    private RecyclerView rcvOrder;
+    private OrderAdapter orderAdapter;
+    private List<CustomerOrder> customerOrderList;
+    private IOrderFinishedContract.Presenter presenter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        customerOrderList = new ArrayList<>();
+        presenter = new OrderFinishedPresenter(this);
+    }
+    @Override
+    public void LoadOrderFinishedCustomer(List<CustomerOrder> customerOrderList) {
+        try {
+            Gson gson = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter()).create();
+
+            for (int i = 0; i < customerOrderList.size(); i++) {
+                JsonObject jsonObject = gson.toJsonTree(customerOrderList.get(i)).getAsJsonObject();
+
+                CustomerOrder customerOrder = gson.fromJson(jsonObject,CustomerOrder.class);
+                this.customerOrderList.add(customerOrder);
+            }
+            orderAdapter.notifyDataSetChanged();
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    private void loadListCustomerOrder()
+    {
+        presenter.OnLoadingOrderFinishedCustomer(1);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order__finish_, container, false);
+        View view =inflater.inflate(R.layout.fragment_order__finish_, container, false);
+        rcvOrder = view.findViewById(R.id.rcvOrder);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(requireContext(),1);
+        orderAdapter =  new OrderAdapter(customerOrderList,this);
+        rcvOrder.setAdapter(orderAdapter);
+        rcvOrder.setLayoutManager(gridLayoutManager);
+        loadListCustomerOrder();
+        return view;
     }
 }

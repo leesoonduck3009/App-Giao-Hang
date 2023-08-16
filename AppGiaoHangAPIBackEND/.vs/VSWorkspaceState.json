@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\AppGiaoHangAPI.Repository"
+    "\\AppGiaoHangAPI",
+    "\\AppGiaoHangAPI.Repository",
+    "\\AppGiaoHangAPI\\Controllers"
   ],
-  "SelectedNode": "\\AppGiaoHangAPI.Repository\\CustomerOrderRepository.cs",
+  "SelectedNode": "\\AppGiaoHangAPI\\Controllers\\TokenController.cs",
   "PreviewInSolutionExplorer": false
 }
