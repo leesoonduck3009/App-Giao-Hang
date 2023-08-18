@@ -1,10 +1,16 @@
 package com.pnb309.appgiaohang_android.Entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Customer {
+public class Customer implements Serializable {
     public Customer() {
         CustomerOrderInformations = new ArrayList<>();
     }
@@ -72,5 +78,6 @@ public class Customer {
     public void setCustomerOrderInformations(List<CustomerOrderInformation> customerOrderInformations) {
         CustomerOrderInformations = customerOrderInformations;
     }
+
 }
 

@@ -12,7 +12,7 @@
             android:id="@+id/imageViewTitle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:src="@drawable/ic_delivered_order"
+            android:src="@drawable/ic_product_cancelled"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_width="80dp"

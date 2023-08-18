@@ -2,6 +2,7 @@ package com.pnb309.appgiaohang_android.Ultilities;
 
 import android.util.Log;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.pnb309.appgiaohang_android.Entity.Account;
 import com.pnb309.appgiaohang_android.Entity.ResponseInfo;
@@ -71,6 +72,31 @@ public class TokenVariable {
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient.build())
+                .build();
+    }
+    public static Retrofit getRetrofitExcludeInstance() {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+
+                // Thêm token vào header Authorization
+                Request request = original.newBuilder()
+                        .header("Authorization", "Bearer " + token)
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        return new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                        .excludeFieldsWithoutExposeAnnotation().create()))
+
                 .client(httpClient.build())
                 .build();
     }

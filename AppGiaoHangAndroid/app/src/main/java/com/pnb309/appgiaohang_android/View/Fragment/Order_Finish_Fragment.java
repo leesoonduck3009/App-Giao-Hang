@@ -13,11 +13,10 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.pnb309.appgiaohang_android.Adapter.OrderAdapter;
-import com.pnb309.appgiaohang_android.Contract.IOrderCancelledContract;
+import com.pnb309.appgiaohang_android.Adapter.OrderFinishedAdapter;
+import com.pnb309.appgiaohang_android.Adapter.OrderOngoingAdapter;
 import com.pnb309.appgiaohang_android.Contract.IOrderFinishedContract;
 import com.pnb309.appgiaohang_android.Entity.CustomerOrder;
-import com.pnb309.appgiaohang_android.Presenter.OrderCancelledPresenter;
 import com.pnb309.appgiaohang_android.Presenter.OrderFinishedPresenter;
 import com.pnb309.appgiaohang_android.R;
 import com.pnb309.appgiaohang_android.Ultilities.DateTypeAdapter;
@@ -33,27 +32,26 @@ import java.util.List;
  */
 public class Order_Finish_Fragment extends Fragment implements IOrderFinishedContract.View {
     private RecyclerView rcvOrder;
-    private OrderAdapter orderAdapter;
+    private OrderFinishedAdapter orderFinishedAdapter;
     private List<CustomerOrder> customerOrderList;
     private IOrderFinishedContract.Presenter presenter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         customerOrderList = new ArrayList<>();
-        presenter = new OrderFinishedPresenter(this);
+        presenter = new OrderFinishedPresenter(this,getContext());
     }
     @Override
     public void LoadOrderFinishedCustomer(List<CustomerOrder> customerOrderList) {
         try {
             Gson gson = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter()).create();
-
             for (int i = 0; i < customerOrderList.size(); i++) {
                 JsonObject jsonObject = gson.toJsonTree(customerOrderList.get(i)).getAsJsonObject();
 
                 CustomerOrder customerOrder = gson.fromJson(jsonObject,CustomerOrder.class);
                 this.customerOrderList.add(customerOrder);
             }
-            orderAdapter.notifyDataSetChanged();
+            orderFinishedAdapter.notifyDataSetChanged();
         }
         catch (Exception e)
         {
@@ -62,6 +60,7 @@ public class Order_Finish_Fragment extends Fragment implements IOrderFinishedCon
     }
     private void loadListCustomerOrder()
     {
+        customerOrderList.clear();
         presenter.OnLoadingOrderFinishedCustomer(1);
     }
 
@@ -72,8 +71,8 @@ public class Order_Finish_Fragment extends Fragment implements IOrderFinishedCon
         View view =inflater.inflate(R.layout.fragment_order__finish_, container, false);
         rcvOrder = view.findViewById(R.id.rcvOrder);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(requireContext(),1);
-        orderAdapter =  new OrderAdapter(customerOrderList,this);
-        rcvOrder.setAdapter(orderAdapter);
+        orderFinishedAdapter =  new OrderFinishedAdapter(customerOrderList,this);
+        rcvOrder.setAdapter(orderFinishedAdapter);
         rcvOrder.setLayoutManager(gridLayoutManager);
         loadListCustomerOrder();
         return view;

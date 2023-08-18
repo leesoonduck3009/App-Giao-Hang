@@ -1,9 +1,10 @@
 package com.pnb309.appgiaohang_android.Entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Product {
+public class Product implements Serializable {
     public Product() {
         CustomerOrderDetails = new ArrayList<>();
     }

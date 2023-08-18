@@ -1,6 +1,8 @@
 package com.pnb309.appgiaohang_android.Entity;
 
-public class CustomerOrderDetail {
+import java.io.Serializable;
+
+public class CustomerOrderDetail implements Serializable {
     private long CustomerOrderDetailId;
     private Long ProductId;
     private Long CustomerOrderId;

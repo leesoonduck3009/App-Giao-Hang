@@ -13,16 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pnb309.appgiaohang_android.Entity.CustomerOrder;
 import com.pnb309.appgiaohang_android.R;
-import com.pnb309.appgiaohang_android.View.Fragment.Order_Ongoing_Fragment;
 import com.pnb309.appgiaohang_android.View.OrderOngoingDetailActivity;
 
 import java.util.List;
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder>{
-
+public class OrderOngoingAdapter extends RecyclerView.Adapter<OrderOngoingAdapter.OrderViewHolder>{
     private List<CustomerOrder> customerOrderList;
+    private int orderType;
     private Fragment fragment;
-    public OrderAdapter(List<CustomerOrder> customerOrderList,Fragment fragment)
+    public OrderOngoingAdapter(List<CustomerOrder> customerOrderList, Fragment fragment)
     {
         this.customerOrderList = customerOrderList;
         this.fragment = fragment;
@@ -45,8 +44,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.txtAddress.setText(customerOrder.getCustomerOrderInformation().getAddress());
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(fragment.getActivity(), OrderOngoingDetailActivity.class);
+            intent.putExtra("order",customerOrderList.get(position));
             fragment.startActivity(intent);
-
         });
     }
 
@@ -55,7 +54,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         return customerOrderList.size();
     }
 
-    public class OrderViewHolder extends RecyclerView.ViewHolder{
+    public static class OrderViewHolder extends RecyclerView.ViewHolder{
         private TextView orderStatus;
         private TextView txtAddress;
         private TextView txtViewName;

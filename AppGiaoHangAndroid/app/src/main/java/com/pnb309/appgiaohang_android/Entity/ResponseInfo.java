@@ -1,9 +1,10 @@
 package com.pnb309.appgiaohang_android.Entity;
 
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.util.Objects;
 
-public class ResponseInfo {
+public class ResponseInfo implements Serializable {
     private int statusCode;
     private String error_code;
     private String message;

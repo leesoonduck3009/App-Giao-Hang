@@ -14,6 +14,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,12 +23,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pnb309.appgiaohang_android.Contract.IOrderOngoingDetailActivityContract;
+import com.pnb309.appgiaohang_android.Entity.CustomerOrder;
+import com.pnb309.appgiaohang_android.Presenter.OrderOngoingDetailActivityPresenter;
 import com.pnb309.appgiaohang_android.R;
+import com.pnb309.appgiaohang_android.Ultilities.MyDialog;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
-public class OrderOngoingDetailActivity extends AppCompatActivity {
+public class OrderOngoingDetailActivity extends AppCompatActivity implements IOrderOngoingDetailActivityContract.View {
     private TextView txtDonHangID;
     private static final int CAMERA_PERMISSION_CODE = 1;
     private TextView tenKhachHang;
@@ -44,9 +51,12 @@ public class OrderOngoingDetailActivity extends AppCompatActivity {
     private TextView tongtienTxtView;
     private ActivityResultLauncher<Uri> takePictureLauncher;
     private Uri imageUri;
+    private CustomerOrder customerOrder;
+    private IOrderOngoingDetailActivityContract.Presenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageUri = null;
         setContentView(R.layout.activity_order_ongoing_detail);
         txtDonHangID = findViewById(R.id.txtDonHangID);
         tenKhachHang = findViewById(R.id.tenKhachHang);
@@ -61,9 +71,10 @@ public class OrderOngoingDetailActivity extends AppCompatActivity {
         btnHoanThanhDon = findViewById(R.id.btnHoanThanhDon);
         btnHuyDon = findViewById(R.id.btnHuyDon);
         tongtienTxtView = findViewById(R.id.tongtienTxtView);
+        presenter = new OrderOngoingDetailActivityPresenter(getApplicationContext(),this);
         setListener();
-        imageUri = createUri();
         registerPictureLauncher();
+        loadDataOrder();
     }
     private Uri createUri(){
         File imageFile =new File(getApplicationContext().getFilesDir(),"camera_photo.jpg");
@@ -75,6 +86,7 @@ public class OrderOngoingDetailActivity extends AppCompatActivity {
     private void setListener()
     {
         OpenImageBtn.setOnClickListener(view -> {
+            imageUri = createUri();
             checkCameraPermissionAndOpenCamera();
         });
         btnRecamera.setOnClickListener(view -> {
@@ -82,6 +94,50 @@ public class OrderOngoingDetailActivity extends AppCompatActivity {
         });
         btnCall.setOnClickListener(view -> {
             dialPhoneNumber(txtSoDienThoai.getText().toString());
+        });
+        btnHoanThanhDon.setOnClickListener(view -> {
+            if(imageUri==null)
+            {
+                Toast.makeText(this, "Vui lòng chụp ảnh xác nhận", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                MyDialog.showDialog(this, "Bạn có chắc chắn với thông tin trên chưa", MyDialog.DialogType.YES_NO, new MyDialog.DialogClickListener() {
+                    @Override
+                    public void onYesClick() {
+                        customerOrder.setOrderStatus(CustomerOrder.ORDER_FINISH);
+                        presenter.OnUpdateCustomerOrderStatus(customerOrder,imageUri);
+                    }
+
+                    @Override
+                    public void onNoClick() {
+
+                    }
+
+                    @Override
+                    public void onOkClick() {
+
+                    }
+                });
+
+            }
+        });
+        btnHuyDon.setOnClickListener(view -> {
+            MyDialog.showDialog(this, "Bạn có chắc chắn với thông tin trên chưa", MyDialog.DialogType.YES_NO, new MyDialog.DialogClickListener() {
+                @Override
+                public void onYesClick() {
+                    customerOrder.setOrderStatus(CustomerOrder.ORDER_CANCLED);
+                    presenter.OnUpdateCustomerOrderStatus(customerOrder,null);
+                }
+
+                @Override
+                public void onNoClick() {
+
+                }
+                @Override
+                public void onOkClick() {
+
+                }
+            });
         });
     }
     private void registerPictureLauncher(){
@@ -126,7 +182,7 @@ public class OrderOngoingDetailActivity extends AppCompatActivity {
            }
            else
            {
-               Toast.makeText(this, "Camera permission denied, Please allow camera permission", Toast.LENGTH_SHORT).show();
+               Toast.makeText(this, "Vui lòng cho phép quyền truy cập camera", Toast.LENGTH_SHORT).show();
            }
         }
     }
@@ -136,5 +192,27 @@ public class OrderOngoingDetailActivity extends AppCompatActivity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+    private void loadDataOrder()
+    {
+        Intent intent = getIntent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            customerOrder = intent.getSerializableExtra("order", CustomerOrder.class);
+        }
+        txtSoDienThoai.setText(customerOrder.getCustomerOrderInformation().getPhoneNumber());
+        DiaChi.setText(customerOrder.getCustomerOrderInformation().getAddress());
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setGroupingUsed(true); // Bật chế độ hiển thị hàng nghìn
+        numberFormat.setMaximumFractionDigits(0); // Số lượng chữ số phần thập phân
+        tongtienTxtView.setText(numberFormat.format(customerOrder.getTotalPrice()));
+    }
+    @Override
+    public void FinishUpdateCustomerOrder(boolean isSuccess) {
+        if(isSuccess){
+            Toast.makeText(getApplicationContext(), "Hoàn thành đơn hàng", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        else
+            Toast.makeText(this, "Cập nhật đơn hàng thất bại", Toast.LENGTH_SHORT).show();
     }
 }

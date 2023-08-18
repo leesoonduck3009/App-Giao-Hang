@@ -1,26 +1,39 @@
 package com.pnb309.appgiaohang_android.Entity;
 
+import com.google.gson.annotations.Expose;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CustomerOrder {
-    public static final String ORDER_ONGOING = "Ðang giao";
+public class CustomerOrder implements Serializable {
+    public static final String TABLE_NAME = "customer-order";
+    public static final String ORDER_ONGOING = "Đang giao";
     public static final String ORDER_CANCLED = "Đã hủy";
     public static final String ORDER_FINISH = "Đã hoàn thành";
     public CustomerOrder() {
         CustomerOrderDetails = new ArrayList<>();
     }
+    @Expose
 
     private long CustomerOrderId;
+    @Expose (serialize = false)
     private Date OrderDate;
+    @Expose
     private Long CustomerOrderInformationId;
+    @Expose
     private Long EmployeeId;
+    @Expose
     private Double TotalPrice;
+    @Expose
     private String OrderStatus;
+
     private CustomerOrderInformation CustomerOrderInformation;
     private Employee Employee;
-    private List<CustomerOrderDetail> CustomerOrderDetails;
+    private transient List<CustomerOrderDetail> CustomerOrderDetails;
+    @Expose
+    private String LinkImage;
 
     public long getCustomerOrderId() {
         return CustomerOrderId;
@@ -92,6 +105,14 @@ public class CustomerOrder {
 
     public void setCustomerOrderDetails(List<CustomerOrderDetail> customerOrderDetails) {
         CustomerOrderDetails = customerOrderDetails;
+    }
+
+    public String getLinkImage() {
+        return LinkImage;
+    }
+
+    public void setLinkImage(String linkImage) {
+        LinkImage = linkImage;
     }
 }
 

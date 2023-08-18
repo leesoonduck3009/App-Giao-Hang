@@ -13,12 +13,11 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.pnb309.appgiaohang_android.Adapter.OrderAdapter;
+import com.pnb309.appgiaohang_android.Adapter.OrderCancelledAdapter;
+import com.pnb309.appgiaohang_android.Adapter.OrderOngoingAdapter;
 import com.pnb309.appgiaohang_android.Contract.IOrderCancelledContract;
-import com.pnb309.appgiaohang_android.Contract.IOrderOngoingFragmentContract;
 import com.pnb309.appgiaohang_android.Entity.CustomerOrder;
 import com.pnb309.appgiaohang_android.Presenter.OrderCancelledPresenter;
-import com.pnb309.appgiaohang_android.Presenter.OrderOngoingFragmentPresenter;
 import com.pnb309.appgiaohang_android.R;
 import com.pnb309.appgiaohang_android.Ultilities.DateTypeAdapter;
 
@@ -34,7 +33,7 @@ import java.util.List;
 public class Order_Cancled_Fragment extends Fragment implements IOrderCancelledContract.View {
 
     private RecyclerView rcvOrder;
-    private OrderAdapter orderAdapter;
+    private OrderCancelledAdapter orderCancelledAdapter;
     private List<CustomerOrder> customerOrderList;
     private IOrderCancelledContract.Presenter presenter;
 
@@ -43,21 +42,20 @@ public class Order_Cancled_Fragment extends Fragment implements IOrderCancelledC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         customerOrderList = new ArrayList<>();
-        presenter = new OrderCancelledPresenter(this);
+        presenter = new OrderCancelledPresenter(this,getContext());
     }
 
     @Override
     public void LoadOrderCancelledCustomer(List<CustomerOrder> customerOrderList) {
         try {
             Gson gson = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter()).create();
-
             for (int i = 0; i < customerOrderList.size(); i++) {
                 JsonObject jsonObject = gson.toJsonTree(customerOrderList.get(i)).getAsJsonObject();
 
                 CustomerOrder customerOrder = gson.fromJson(jsonObject,CustomerOrder.class);
                 this.customerOrderList.add(customerOrder);
             }
-            orderAdapter.notifyDataSetChanged();
+            orderCancelledAdapter.notifyDataSetChanged();
         }
         catch (Exception e)
         {
@@ -66,6 +64,7 @@ public class Order_Cancled_Fragment extends Fragment implements IOrderCancelledC
     }
     private void loadListCustomerOrder()
     {
+        customerOrderList.clear();
         presenter.OnLoadingOrderCancelledCustomer(1);
     }
 
@@ -76,8 +75,8 @@ public class Order_Cancled_Fragment extends Fragment implements IOrderCancelledC
         View view =inflater.inflate(R.layout.fragment_order__cancled_, container, false);
         rcvOrder = view.findViewById(R.id.rcvOrder);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(requireContext(),1);
-        orderAdapter =  new OrderAdapter(customerOrderList,this);
-        rcvOrder.setAdapter(orderAdapter);
+        orderCancelledAdapter =  new OrderCancelledAdapter(customerOrderList,this);
+        rcvOrder.setAdapter(orderCancelledAdapter);
         rcvOrder.setLayoutManager(gridLayoutManager);
         loadListCustomerOrder();
         return view;

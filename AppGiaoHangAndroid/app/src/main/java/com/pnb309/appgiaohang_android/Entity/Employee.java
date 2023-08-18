@@ -1,10 +1,11 @@
 package com.pnb309.appgiaohang_android.Entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Employee {
+public class Employee implements Serializable {
     public Employee() {
         Accounts = new ArrayList<>();
         CustomerOrders = new ArrayList<>();

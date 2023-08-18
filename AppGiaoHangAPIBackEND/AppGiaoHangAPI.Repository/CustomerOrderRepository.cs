@@ -290,10 +290,36 @@ namespace AppGiaoHangAPI.Repository
                     .Include(p => p.CustomerOrderDetails)
                     .Include(p => p.Employee)
                     .Include(p => p.CustomerOrderInformation)
-                    .Where(p => p.EmployeeId == customerOrder.EmployeeId && p.OrderStatus == customerOrder.OrderStatus)
+                    .Where(p => p.EmployeeId == customerOrder.EmployeeId && p.OrderStatus == customerOrder.OrderStatus
+                    )
                     .AsNoTracking()
                     .ToListAsync();
                 errorMessageInfo.isSuccess = true;
+            }
+            catch (Exception e)
+            {
+                errorMessageInfo.isErrorEx = true;
+                errorMessageInfo.message = e.Message;
+                errorMessageInfo.error_code = "ErrOrd001";
+            }
+            return errorMessageInfo;
+        }
+
+        public async Task<ErrorMessageInfo> putSingleCustomerOrder(long orderID, CustomerOrder customerOrder)
+        {
+            ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
+            try
+            {
+                using(SqlConnection sqlConnection = new SqlConnection(connectionString))
+                {
+                    sqlConnection.Open();
+                    string queryUpdate = "UPDATE CustomerOrder " +
+                                           "SET OrderStatus = @OrderStatus, @LinkImage = LinkImage " +
+                                           "WHERE CustomerOrderID = @CustomerOrderId";
+                    errorMessageInfo.data = await sqlConnection.ExecuteAsync(queryUpdate, customerOrder);
+                    errorMessageInfo.isSuccess = true;
+                    sqlConnection.Close();
+                }                 
             }
             catch (Exception e)
             {

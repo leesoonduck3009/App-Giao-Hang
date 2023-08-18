@@ -6,31 +6,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.pnb309.appgiaohang_android.Adapter.OrderAdapter;
 import com.pnb309.appgiaohang_android.Contract.IOrderOngoingFragmentContract;
-import com.pnb309.appgiaohang_android.Entity.CustomerOrder;
 import com.pnb309.appgiaohang_android.R;
-import com.pnb309.appgiaohang_android.Ultilities.DateTypeAdapter;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class OrderFragment extends Fragment  {

@@ -1,8 +1,12 @@
 package com.pnb309.appgiaohang_android.Entity;
 
+import android.os.Bundle;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class Account {
+public class Account implements Serializable {
     private long AccountId;
     private String UserName;
     private String Password;

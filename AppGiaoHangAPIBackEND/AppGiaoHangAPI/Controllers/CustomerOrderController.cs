@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using AppGiaoHangAPI.Model.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppGiaoHangAPI.Controllers
 {
     [Route("api/customer-order")]
     [ApiController]
+    [Authorize]
     public class CustomerOrderController : ControllerBase
     {
         private ICustomerOrderRepository orderRepository;
@@ -184,6 +186,31 @@ namespace AppGiaoHangAPI.Controllers
             }
         }
         [HttpPut("{OrderID}")]
+        public async Task<ActionResult<ResponeInfo>> putSingleOrderCustomer(long OrderID, CustomerOrder customer)
+        {
+            ResponeInfo responeInfo = new ResponeInfo();
+            try
+            {
+                responeInfo.statusCode = System.Net.HttpStatusCode.OK;
+                Stream a = HttpContext.Request.Body;
+                ErrorMessageInfo error = await orderRepository.putSingleCustomerOrder(OrderID, customer);
+                if (error.isErrorEx || !error.isSuccess)
+                {
+                    responeInfo.error_code = error.error_code;
+                    responeInfo.message = error.message;
+                    return BadRequest(responeInfo);
+                }
+                responeInfo.data = error.data;
+                return await Task.FromResult(responeInfo);
+            }
+            catch (Exception ex)
+            {
+                responeInfo.statusCode = System.Net.HttpStatusCode.InternalServerError;
+                responeInfo.message = ex.Message;
+                return BadRequest(responeInfo);
+            }
+        }
+        [HttpPut("putListCustomer")]
         public async Task<ActionResult<ResponeInfo>> putCustomerOrder(List<CustomerOrder> customerOrders)
         {
             ResponeInfo responeInfo = new ResponeInfo();
