@@ -216,6 +216,59 @@ namespace AppGiaoHangAPI.Repository
             return errorMessageInfo;
         }
 
+        public async Task<ErrorMessageInfo> updateEmployeeLocation(long id, Employee employee)
+        {
+            ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();
+            try
+            {
+                using (SqlConnection sql = new SqlConnection(connectionString))
+                {
+                    try
+                    {
+                        sql.Open();
+                        employee.EmployeeId = id;
+                        DynamicParameters dynamicParameters = new DynamicParameters();
+                        string querySelect = "SELECT * FROM Employee WHERE EmployeeID = @id";
+                        dynamicParameters.Add("id", employee.EmployeeId);
+                        Employee employeeFind = await sql.QuerySingleOrDefaultAsync<Employee>(querySelect, dynamicParameters);
+                        if (employeeFind == null)
+                        {
+                            errorMessageInfo.isErrorEx = true;
+                            errorMessageInfo.message = "Không có nhân viên này";
+                            errorMessageInfo.error_code = "ErrEmpl003";
+                            return errorMessageInfo;
+                        }
+                        else
+                        {
+                            employee.EmployeeCode = employeeFind.EmployeeCode;
+                            employee.EmployeeId = employeeFind.EmployeeId;
+
+                            string queryDelete = "UPDATE Employee   " +
+                                "SET LastLongitude = @LastLongitude, LastLatitude = @LastLatitude " +
+                                "Where EmployeeID = @EmployeeId";
+                            errorMessageInfo.data = await sql.ExecuteAsync(queryDelete, employee);
+                            errorMessageInfo.isSuccess = true;
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        errorMessageInfo.message = e.Message;
+                        errorMessageInfo.isErrorEx = true;
+                        errorMessageInfo.error_code = "ErrEmpl001";
+                        return errorMessageInfo;
+                    }
+                  }
+                return errorMessageInfo;
+            }
+            catch (Exception e)
+            {
+                errorMessageInfo.message = e.Message;
+                errorMessageInfo.isErrorEx = true;
+                errorMessageInfo.error_code = "ErrEmpl001";
+                return errorMessageInfo;
+            }
+        }
+
         public async Task<ErrorMessageInfo> updateNewEmployee(List<Employee> employees)
         {
             ErrorMessageInfo errorMessageInfo = new ErrorMessageInfo();

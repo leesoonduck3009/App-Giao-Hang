@@ -15,6 +15,7 @@ namespace AppGiaoHangAPI.Interface.IRepository
         Task<ErrorMessageInfo> createNewEmployee(List<Employee> employees);
         Task<ErrorMessageInfo> updateNewEmployee(List<Employee> employees);
         Task<ErrorMessageInfo> deleteNewEmployee(List<Employee> employees);
+        Task<ErrorMessageInfo> updateEmployeeLocation(long id, Employee employee);
 
     }
 }

@@ -9,6 +9,8 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Intent;
@@ -23,8 +25,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pnb309.appgiaohang_android.Adapter.OrderDetailAdapter;
 import com.pnb309.appgiaohang_android.Contract.IOrderOngoingDetailActivityContract;
 import com.pnb309.appgiaohang_android.Entity.CustomerOrder;
+import com.pnb309.appgiaohang_android.Entity.CustomerOrderDetail;
 import com.pnb309.appgiaohang_android.Presenter.OrderOngoingDetailActivityPresenter;
 import com.pnb309.appgiaohang_android.R;
 import com.pnb309.appgiaohang_android.Ultilities.MyDialog;
@@ -33,6 +37,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderOngoingDetailActivity extends AppCompatActivity implements IOrderOngoingDetailActivityContract.View {
     private TextView txtDonHangID;
@@ -53,6 +59,9 @@ public class OrderOngoingDetailActivity extends AppCompatActivity implements IOr
     private Uri imageUri;
     private CustomerOrder customerOrder;
     private IOrderOngoingDetailActivityContract.Presenter presenter;
+    private RecyclerView rcvOrderDetail;
+    private OrderDetailAdapter orderDetailAdapter;
+    private List<CustomerOrderDetail> customerOrderDetailList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +80,9 @@ public class OrderOngoingDetailActivity extends AppCompatActivity implements IOr
         btnHoanThanhDon = findViewById(R.id.btnHoanThanhDon);
         btnHuyDon = findViewById(R.id.btnHuyDon);
         tongtienTxtView = findViewById(R.id.tongtienTxtView);
+        rcvOrderDetail = findViewById(R.id.rcvOrderDetail);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),1);
+        rcvOrderDetail.setLayoutManager(gridLayoutManager);
         presenter = new OrderOngoingDetailActivityPresenter(getApplicationContext(),this);
         setListener();
         registerPictureLauncher();
@@ -85,6 +97,10 @@ public class OrderOngoingDetailActivity extends AppCompatActivity implements IOr
     }
     private void setListener()
     {
+        btnMap.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(),MapOrderActivity.class);
+            startActivity(intent);
+        });
         OpenImageBtn.setOnClickListener(view -> {
             imageUri = createUri();
             checkCameraPermissionAndOpenCamera();
@@ -199,6 +215,13 @@ public class OrderOngoingDetailActivity extends AppCompatActivity implements IOr
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             customerOrder = intent.getSerializableExtra("order", CustomerOrder.class);
         }
+        customerOrderDetailList = new ArrayList<>();
+        if(customerOrder.getCustomerOrderDetails()!=null)
+            orderDetailAdapter = new OrderDetailAdapter(customerOrder.getCustomerOrderDetails());
+        else
+            orderDetailAdapter = new OrderDetailAdapter(customerOrderDetailList);
+        orderDetailAdapter.notifyDataSetChanged();
+        rcvOrderDetail.setAdapter(orderDetailAdapter);
         txtSoDienThoai.setText(customerOrder.getCustomerOrderInformation().getPhoneNumber());
         DiaChi.setText(customerOrder.getCustomerOrderInformation().getAddress());
         NumberFormat numberFormat = NumberFormat.getNumberInstance();

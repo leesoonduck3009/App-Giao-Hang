@@ -75,6 +75,7 @@ namespace AppGiaoHangAPI.Repository
 
                 errorMessageInfo.data = await quanlyCuaHang.CustomerOrders
                     .Include(p => p.CustomerOrderDetails)
+                    .ThenInclude(p => p.Product)
                     .Include(p=>p.Employee)
                     .Include(p=>p.CustomerOrderInformation)
                     .Where(p => p.EmployeeId == employeeID)
@@ -288,10 +289,10 @@ namespace AppGiaoHangAPI.Repository
 
                 errorMessageInfo.data = await quanlyCuaHang.CustomerOrders
                     .Include(p => p.CustomerOrderDetails)
+                    .ThenInclude(p => p.Product)
                     .Include(p => p.Employee)
                     .Include(p => p.CustomerOrderInformation)
-                    .Where(p => p.EmployeeId == customerOrder.EmployeeId && p.OrderStatus == customerOrder.OrderStatus
-                    )
+                    .Where(p => p.EmployeeId == customerOrder.EmployeeId && p.OrderStatus == customerOrder.OrderStatus)
                     .AsNoTracking()
                     .ToListAsync();
                 errorMessageInfo.isSuccess = true;

@@ -19,6 +19,8 @@ namespace AppGiaoHangAPI.Model.Model
         public string? PhoneNumber { get; set; }
         public string? IdentityNumber { get; set; }
         public DateTime? Birthday { get; set; }
+        public double? LastLatitude { get; set; }
+        public double? LastLongitude { get; set; }
 
         public virtual ICollection<Account> Accounts { get; set; }
         public virtual ICollection<CustomerOrder> CustomerOrders { get; set; }

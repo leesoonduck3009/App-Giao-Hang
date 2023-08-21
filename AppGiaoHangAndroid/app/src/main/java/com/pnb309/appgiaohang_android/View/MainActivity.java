@@ -3,9 +3,12 @@ package com.pnb309.appgiaohang_android.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.pnb309.appgiaohang_android.R;
+import com.pnb309.appgiaohang_android.Services.GoogleMapService;
 import com.pnb309.appgiaohang_android.View.Fragment.OrderFragment;
 
 
@@ -24,5 +27,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .show(orderFragment)
                 .commit();
+        Log.d("LONGITUDE",String.valueOf(111));
+
+        startService(new Intent(this, GoogleMapService.class));
     }
 }

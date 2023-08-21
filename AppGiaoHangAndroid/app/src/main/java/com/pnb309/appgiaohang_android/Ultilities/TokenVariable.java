@@ -32,7 +32,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 public class TokenVariable {
     public static String token;
     public static LocalDateTime timeExpired;
-    private static final String BASE_URL = "http://192.168.1.115:8080/api/";
+    private static final String BASE_URL = "http://192.168.1.118:8080/api/";
     public static void setTokenExpiredTime() throws JSONException {
         String[] chunks = token.split("\\.");
         Base64.Decoder decoder = null;

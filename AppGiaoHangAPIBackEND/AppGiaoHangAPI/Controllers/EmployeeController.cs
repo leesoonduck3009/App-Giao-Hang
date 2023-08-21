@@ -150,5 +150,31 @@ namespace AppGiaoHangAPI.Controllers
                 return BadRequest(responeInfo);
             }
         }
+        [HttpPut("location/{id}", Name = "UpdateEmployeeLocation")]
+        public async Task<ActionResult<ResponeInfo>> updateEmployeeLocation(long id, Employee employee)
+        {
+            ResponeInfo responeInfo = new ResponeInfo();
+            try
+            {
+                responeInfo.statusCode = System.Net.HttpStatusCode.OK;
+                Stream a = HttpContext.Request.Body;
+                ErrorMessageInfo error = await employeeRepository.updateEmployeeLocation(id, employee);
+                if (error.isErrorEx || !error.isSuccess)
+                {
+
+                    responeInfo.error_code = error.error_code;
+                    responeInfo.message = error.message;
+                    return BadRequest(responeInfo);
+                }
+                responeInfo.data = error.data;
+                return await Task.FromResult(responeInfo);
+            }
+            catch (Exception ex)
+            {
+                responeInfo.statusCode = System.Net.HttpStatusCode.InternalServerError;
+                responeInfo.message = ex.Message;
+                return BadRequest(responeInfo);
+            }
+        }
     }
 }

@@ -37,7 +37,7 @@ public class AccountModel implements IAccountModel{
     public AccountModel()
     {
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.115:8080/api/")
+                .baseUrl("http://192.168.1.118:8080/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         accountService = retrofit.create(IAccountService.class);

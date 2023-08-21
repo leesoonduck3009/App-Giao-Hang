@@ -151,6 +151,8 @@ namespace AppGiaoHangAPI.Model.Model
                 entity.Property(e => e.Birthday).HasColumnType("datetime");
 
                 entity.Property(e => e.DateJoin).HasColumnType("datetime");
+                entity.Property(e => e.LastLatitude).HasColumnType("float");
+                entity.Property(e => e.LastLongitude).HasColumnType("float");
 
                 entity.Property(e => e.EmployeeCode)
                     .HasMaxLength(8)

@@ -31,7 +31,7 @@ public class CustomerOrder implements Serializable {
 
     private CustomerOrderInformation CustomerOrderInformation;
     private Employee Employee;
-    private transient List<CustomerOrderDetail> CustomerOrderDetails;
+    private List<CustomerOrderDetail> CustomerOrderDetails;
     @Expose
     private String LinkImage;
 
