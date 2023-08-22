@@ -1,5 +1,7 @@
 package com.pnb309.appgiaohang_android.Entity;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,91 +9,117 @@ import java.util.List;
 
 public class Employee implements Serializable {
     public Employee() {
-        Accounts = new ArrayList<>();
-        CustomerOrders = new ArrayList<>();
+        accounts = new ArrayList<>();
+        customerOrders = new ArrayList<>();
+    }
+    @Expose
+    private long employeeId;
+    @Expose
+    private String employeeCode;
+    @Expose
+    private String employeeName;
+    @Expose
+    private Date dateJoin;
+    @Expose
+    private String phoneNumber;
+    @Expose
+    private String identityNumber;
+    @Expose
+    private Date birthday;
+    @Expose
+    private double lastLatitude;
+    @Expose
+    private double lastLongitude;
+
+    private List<Account> accounts;
+    private List<CustomerOrder> customerOrders;
+
+    public double getLastLatitude() {
+        return lastLatitude;
     }
 
-    private long EmployeeId;
-    private String EmployeeCode;
-    private String EmployeeName;
-    private Date DateJoin;
-    private String PhoneNumber;
-    private String IdentityNumber;
-    private Date Birthday;
+    public void setLastLatitude(double lastLatitude) {
+       this.lastLatitude = lastLatitude;
+    }
 
-    private List<Account> Accounts;
-    private List<CustomerOrder> CustomerOrders;
+    public double getLastLongitude() {
+        return lastLongitude;
+    }
+
+    public void setLastLongitude(double lastLongitude) {
+        this.lastLongitude = lastLongitude;
+    }
 
     public long getEmployeeId() {
-        return EmployeeId;
+        return employeeId;
     }
 
     public void setEmployeeId(long employeeId) {
-        EmployeeId = employeeId;
+        this.employeeId = employeeId;
     }
 
     public String getEmployeeCode() {
-        return EmployeeCode;
+        return this.employeeCode;
     }
 
     public void setEmployeeCode(String employeeCode) {
-        EmployeeCode = employeeCode;
+        this.employeeCode = employeeCode;
     }
 
     public String getEmployeeName() {
-        return EmployeeName;
+        return this.employeeName;
     }
 
     public void setEmployeeName(String employeeName) {
-        EmployeeName = employeeName;
+        this.employeeName = employeeName;
     }
 
     public Date getDateJoin() {
-        return DateJoin;
+        return this.dateJoin;
     }
 
     public void setDateJoin(Date dateJoin) {
-        DateJoin = dateJoin;
+        this.dateJoin = dateJoin;
     }
 
     public String getPhoneNumber() {
-        return PhoneNumber;
+        return this.phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        PhoneNumber = phoneNumber;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getIdentityNumber() {
-        return IdentityNumber;
+        return identityNumber;
     }
 
     public void setIdentityNumber(String identityNumber) {
-        IdentityNumber = identityNumber;
+        this.identityNumber = identityNumber;
     }
 
     public Date getBirthday() {
-        return Birthday;
+        return this.birthday;
     }
 
     public void setBirthday(Date birthday) {
-        Birthday = birthday;
+        this.birthday = birthday;
     }
 
     public List<Account> getAccounts() {
-        return Accounts;
+        return accounts;
     }
 
     public void setAccounts(List<Account> accounts) {
-        Accounts = accounts;
+        this.accounts = accounts;
     }
 
     public List<CustomerOrder> getCustomerOrders() {
-        return CustomerOrders;
+        return customerOrders;
     }
 
     public void setCustomerOrders(List<CustomerOrder> customerOrders) {
-        CustomerOrders = customerOrders;
+        this.customerOrders = customerOrders;
     }
 }
 

@@ -45,7 +45,7 @@ public class MapOrderActivity extends AppCompatActivity  implements OnMapReadyCa
                 // Hiển thị vị trí trên bản đồ
                 LatLng latLng = new LatLng(latitude, longitude);
                 mMap.addMarker(new MarkerOptions().position(latLng).title("Vị trí của tôi"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
             }
 
             @Override

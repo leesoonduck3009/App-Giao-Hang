@@ -41,7 +41,8 @@ namespace AppGiaoHangAPI.Controllers
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                         new Claim(JwtRegisteredClaimNames.Exp, DateTime.UtcNow.AddMinutes(10).ToString()),
-                        new Claim(ClaimTypes.Role,accountFind.Roles)
+                        new Claim(ClaimTypes.Role,accountFind.Roles),
+                        new Claim("employeeID",accountFind. EmployeeId.ToString())
                     };
                         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
                         var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

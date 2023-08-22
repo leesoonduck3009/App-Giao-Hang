@@ -13,6 +13,7 @@ import com.pnb309.appgiaohang_android.Entity.Customer;
 import com.pnb309.appgiaohang_android.Entity.ResponseInfo;
 import com.pnb309.appgiaohang_android.Services.IAccountService;
 import com.pnb309.appgiaohang_android.Services.ICustomerService;
+import com.pnb309.appgiaohang_android.Services.IEmployeeService;
 import com.pnb309.appgiaohang_android.Ultilities.TokenVariable;
 import com.squareup.moshi.Moshi;
 
@@ -36,10 +37,7 @@ public class AccountModel implements IAccountModel{
     private Retrofit retrofit;
     public AccountModel()
     {
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.118:8080/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        retrofit = TokenVariable.getRetrofitWithoutAuthorizeInstance();
         accountService = retrofit.create(IAccountService.class);
       //  customerService = retrofit.create(ICustomerService.class);
     }

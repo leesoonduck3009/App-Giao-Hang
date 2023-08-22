@@ -2,6 +2,7 @@ package com.pnb309.appgiaohang_android.Ultilities;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.pnb309.appgiaohang_android.Entity.Account;
@@ -32,6 +33,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 public class TokenVariable {
     public static String token;
     public static LocalDateTime timeExpired;
+    public static Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            .create();
     private static final String BASE_URL = "http://192.168.1.118:8080/api/";
     public static void setTokenExpiredTime() throws JSONException {
         String[] chunks = token.split("\\.");
@@ -52,6 +56,24 @@ public class TokenVariable {
             Log.d("payload",payload);
         }
     }
+    public static long getEmployeeID() throws JSONException {
+        String[] chunks = token.split("\\.");
+        Base64.Decoder decoder = null;
+        String header;
+        String payload;
+        Date date = new Date();
+        Byte[] bytes;
+        long employeeID = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            decoder = Base64.getUrlDecoder();
+            header = new String(decoder.decode(chunks[0]));
+            payload = new String(decoder.decode(chunks[1]));
+            JSONObject jsonObject = new JSONObject(payload);
+            employeeID = jsonObject.getLong("employeeID");
+            return employeeID;
+        }
+        return employeeID;
+    }
     public static Retrofit getRetrofitInstance() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -64,15 +86,21 @@ public class TokenVariable {
                         .header("Authorization", "Bearer " + token)
                         .method(original.method(), original.body())
                         .build();
-
                 return chain.proceed(request);
             }
         });
 
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(httpClient.build())
+                .build();
+    }
+    public static Retrofit getRetrofitWithoutAuthorizeInstance() {
+
+        return new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
     public static Retrofit getRetrofitExcludeInstance() {

@@ -7,6 +7,6 @@
     "\\AppGiaoHangAPI.Repository",
     "\\AppGiaoHangAPI\\Controllers"
   ],
-  "SelectedNode": "\\AppGiaoHangAPI.Model\\Model\\CustomerOrderDetail.cs",
+  "SelectedNode": "\\AppGiaoHangAPI.Repository\\EmployeeRepository.cs",
   "PreviewInSolutionExplorer": false
 }
