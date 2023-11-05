@@ -144,3 +144,8 @@ D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPIBackEND\AppGiaoHangAPI\o
 D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPIBackEND\AppGiaoHangAPI\obj\Debug\net6.0\AppGiaoHangAPI.pdb
 D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPIBackEND\AppGiaoHangAPI\obj\Debug\net6.0\AppGiaoHangAPI.genruntimeconfig.cache
 D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPIBackEND\AppGiaoHangAPI\obj\Debug\net6.0\ref\AppGiaoHangAPI.dll
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPIBackEND\AppGiaoHangAPI\obj\Debug\net6.0\staticwebassets\msbuild.AppGiaoHangAPI.Microsoft.AspNetCore.StaticWebAssets.props
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPIBackEND\AppGiaoHangAPI\obj\Debug\net6.0\staticwebassets\msbuild.build.AppGiaoHangAPI.props
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPIBackEND\AppGiaoHangAPI\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.AppGiaoHangAPI.props
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPIBackEND\AppGiaoHangAPI\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.AppGiaoHangAPI.props
+D:\Data\BongMai\AppDatHang\AppGiaoHangAPI\AppGiaoHangAPIBackEND\AppGiaoHangAPI\obj\Debug\net6.0\staticwebassets.pack.json

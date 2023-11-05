@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">App Giao Hang</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name= "api_connection">http://192.168.1.118:8080/api/</string>
-</resources>

@@ -10,11 +10,11 @@
         "projectUniqueName": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI.Model\\AppGiaoHangAPI.Model.csproj",
         "projectName": "AppGiaoHangAPI.Model",
         "projectPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI.Model\\AppGiaoHangAPI.Model.csproj",
-        "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\My Laptop\\.nuget\\packages\\",
         "outputPath": "D:\\Data\\BongMai\\AppDatHang\\AppGiaoHangAPI\\AppGiaoHangAPIBackEND\\AppGiaoHangAPI.Model\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\My Laptop\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -87,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     }
